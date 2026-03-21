@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { StyleProvider } from '@ant-design/cssinjs'
 import './index.css'
 import App from './App.tsx'
 
@@ -18,6 +19,11 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    {/* StyleProvider layer: ép antd inject CSS vào @layer antd
+        → Tailwind utilities sẽ thắng antd khi conflict */}
+    <StyleProvider layer>
+      <RouterProvider router={router} />
+    </StyleProvider>
   </StrictMode>,
 )
+

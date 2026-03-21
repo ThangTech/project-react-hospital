@@ -1,21 +1,38 @@
+/* Khai báo thứ tự layer: layer nào khai báo SAU sẽ thắng khi conflict
+   antd < base < components < utilities
+   → Tailwind utilities luôn thắng antd styles */
+@layer antd, base, components, utilities;
+
 @import "tailwindcss";
 
-/* ===== Global Reset & Base ===== */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+
+/* ===== Ép Tailwind thắng antd CSS =====
+   Antd inject styles không qua CSS layer → Tailwind utilities bị thua.
+   Giải pháp: reset lại các thẻ mà antd hay override.
+*/
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    background-color: #f5f5f5;
+    color: #333;
+  }
+
+  /* Reset antd global a tag override */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
-body {
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  min-height: 100vh;
-  background-color: #f5f5f5;
-  color: #333;
-}
-
-#root {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}

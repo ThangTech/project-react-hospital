@@ -1,83 +1,89 @@
-import {
-  EnvironmentOutlined,
-  PhoneOutlined,
-  MailOutlined,
-  ClockCircleOutlined,
-  FacebookOutlined,
-  YoutubeOutlined,
-} from '@ant-design/icons';
 import { Link } from 'react-router-dom';
+import { MapPin, Phone, Mail, Clock, Facebook, Youtube } from 'lucide-react';
+import logo from '../../assets/logo.jpg';
+
+const footerLinks = [
+  { label: 'Trang chủ', path: '/' },
+  { label: 'Khoa phòng', path: '/khoa-phong' },
+  { label: 'Đội ngũ bác sĩ', path: '/bac-si' },
+  { label: 'Dịch vụ', path: '/dich-vu' },
+  { label: 'Liên hệ', path: '/lien-he' },
+];
 
 const Footer = () => {
   return (
-    <footer className="bg-[#001529] text-gray-300">
-      {/* Main footer content */}
-      <div className="max-w-7xl mx-auto px-4 py-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <footer className="bg-[#0a1628] text-gray-400 mt-auto">
+      {/* Main footer */}
+      <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
 
-          {/* Cột 1: Giới thiệu */}
-          <div>
-            <h3 className="text-white text-lg font-bold mb-4">🏥 HOSPITAL</h3>
-            <p className="text-sm leading-relaxed">
-              Hệ thống quản lý bệnh viện hiện đại, cung cấp dịch vụ y tế chất lượng cao
-              với đội ngũ bác sĩ giàu kinh nghiệm.
+          {/* Cột 1: Thương hiệu */}
+          <div className="lg:col-span-1">
+            <div className="flex items-center gap-3 mb-4">
+              <img
+                src={logo}
+                alt="Logo"
+                className="h-10 w-10 rounded-full object-cover border-2 border-[#005b96]"
+              />
+              <div>
+                <div className="text-white font-bold text-sm leading-tight">BỆNH VIỆN ĐA KHOA</div>
+                <div className="text-xs text-gray-500 leading-tight">Hospital Management System</div>
+              </div>
+            </div>
+            <p className="text-sm leading-relaxed text-gray-400">
+              Cung cấp dịch vụ y tế chất lượng cao, tận tâm với sức khỏe cộng đồng.
             </p>
-            <div className="flex gap-3 mt-4">
-              <a href="#" className="text-gray-400 hover:text-[#1677ff] text-xl transition-colors">
-                <FacebookOutlined />
+            <div className="flex gap-3 mt-5">
+              <a
+                href="#"
+                className="flex items-center justify-center w-8 h-8 rounded-full bg-white/5 hover:bg-[#005b96] text-gray-400 hover:text-white transition-all duration-200"
+              >
+                <Facebook size={15} />
               </a>
-              <a href="#" className="text-gray-400 hover:text-red-500 text-xl transition-colors">
-                <YoutubeOutlined />
+              <a
+                href="#"
+                className="flex items-center justify-center w-8 h-8 rounded-full bg-white/5 hover:bg-red-600 text-gray-400 hover:text-white transition-all duration-200"
+              >
+                <Youtube size={15} />
               </a>
             </div>
           </div>
 
           {/* Cột 2: Liên kết nhanh */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">Liên kết nhanh</h3>
-            <ul className="space-y-2 text-sm">
-              <li>
-                <Link to="/" className="hover:text-[#1677ff] transition-colors">
-                  Trang chủ
-                </Link>
-              </li>
-              <li>
-                <Link to="/khoa-phong" className="hover:text-[#1677ff] transition-colors">
-                  Khoa phòng
-                </Link>
-              </li>
-              <li>
-                <Link to="/bac-si" className="hover:text-[#1677ff] transition-colors">
-                  Đội ngũ bác sĩ
-                </Link>
-              </li>
-              <li>
-                <Link to="/dich-vu" className="hover:text-[#1677ff] transition-colors">
-                  Dịch vụ
-                </Link>
-              </li>
-              <li>
-                <Link to="/lien-he" className="hover:text-[#1677ff] transition-colors">
-                  Liên hệ
-                </Link>
-              </li>
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">
+              Liên kết nhanh
+            </h4>
+            <ul className="space-y-2.5">
+              {footerLinks.map((link) => (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    className="text-sm text-gray-400 hover:text-white hover:translate-x-1 transition-all duration-150 inline-block"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Cột 3: Thông tin liên hệ */}
+          {/* Cột 3: Liên hệ */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">Liên hệ</h3>
-            <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-2">
-                <EnvironmentOutlined className="mt-1 text-[#1677ff]" />
-                <span>123 Đường ABC, Quận XYZ, TP. Hồ Chí Minh</span>
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">
+              Thông tin liên hệ
+            </h4>
+            <ul className="space-y-3">
+              <li className="flex items-start gap-3 text-sm">
+                <MapPin size={15} className="mt-0.5 text-[#4a9fd4] flex-shrink-0" />
+                <span>123 Đường Nguyễn Văn A, Quận 1, TP. Hồ Chí Minh</span>
               </li>
-              <li className="flex items-center gap-2">
-                <PhoneOutlined className="text-[#1677ff]" />
-                <span>1900-xxxx</span>
+              <li className="flex items-center gap-3 text-sm">
+                <Phone size={15} className="text-[#4a9fd4] flex-shrink-0" />
+                <span>Hotline: <span className="text-white">1900-1234</span></span>
               </li>
-              <li className="flex items-center gap-2">
-                <MailOutlined className="text-[#1677ff]" />
+              <li className="flex items-center gap-3 text-sm">
+                <Mail size={15} className="text-[#4a9fd4] flex-shrink-0" />
                 <span>contact@hospital.vn</span>
               </li>
             </ul>
@@ -85,27 +91,29 @@ const Footer = () => {
 
           {/* Cột 4: Giờ làm việc */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">Giờ làm việc</h3>
+            <h4 className="text-white font-semibold text-sm uppercase tracking-wider mb-4">
+              Giờ làm việc
+            </h4>
             <ul className="space-y-3 text-sm">
-              <li className="flex items-center gap-2">
-                <ClockCircleOutlined className="text-[#1677ff]" />
+              <li className="flex items-start gap-3">
+                <Clock size={15} className="mt-0.5 text-[#4a9fd4] flex-shrink-0" />
                 <div>
-                  <div className="font-medium text-white">Thứ 2 - Thứ 6</div>
-                  <div>7:00 - 17:00</div>
+                  <div className="text-white">Thứ 2 – Thứ 6</div>
+                  <div>07:00 – 17:00</div>
                 </div>
               </li>
-              <li className="flex items-center gap-2">
-                <ClockCircleOutlined className="text-[#1677ff]" />
+              <li className="flex items-start gap-3">
+                <Clock size={15} className="mt-0.5 text-[#4a9fd4] flex-shrink-0" />
                 <div>
-                  <div className="font-medium text-white">Thứ 7</div>
-                  <div>7:00 - 12:00</div>
+                  <div className="text-white">Thứ 7</div>
+                  <div>07:00 – 12:00</div>
                 </div>
               </li>
-              <li className="flex items-center gap-2">
-                <ClockCircleOutlined className="text-gray-500" />
+              <li className="flex items-start gap-3">
+                <Clock size={15} className="mt-0.5 text-gray-600 flex-shrink-0" />
                 <div>
-                  <div className="font-medium text-white">Chủ nhật</div>
-                  <div className="text-gray-500">Nghỉ</div>
+                  <div className="text-gray-500">Chủ nhật</div>
+                  <div className="text-gray-600">Nghỉ</div>
                 </div>
               </li>
             </ul>
@@ -114,9 +122,9 @@ const Footer = () => {
       </div>
 
       {/* Copyright bar */}
-      <div className="border-t border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 py-4 text-center text-sm text-gray-500">
-          © 2026 Hospital Management System. All rights reserved.
+      <div className="border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-6 py-8 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-gray-600">
+          <span>© 2026 Bệnh Viện Đa Khoa. All rights reserved.</span>
         </div>
       </div>
     </footer>
