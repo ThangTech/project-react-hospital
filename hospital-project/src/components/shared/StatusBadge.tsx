@@ -1,4 +1,4 @@
-interface StatusBadgeProps {
+type StatusBadgeProps = {
   status: string;
 }
 

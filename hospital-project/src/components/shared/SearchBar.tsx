@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-interface SearchBarProps {
+type SearchBarProps = {
   placeholder?: string;
   onSearch: (value: string) => void;
   className?: string;

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 
-interface StatCardProps {
+type StatCardProps = {
   icon: ReactNode;
   value: string | number;
   label: string;

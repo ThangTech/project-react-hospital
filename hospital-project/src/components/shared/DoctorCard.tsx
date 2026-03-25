@@ -1,4 +1,4 @@
-interface DoctorCardProps {
+type DoctorCardProps = {
   name: string;
   specialty: string;
   department?: string;

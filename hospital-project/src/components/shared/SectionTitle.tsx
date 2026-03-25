@@ -1,4 +1,4 @@
-interface SectionTitleProps {
+type SectionTitleProps = {
   title: string;
   subtitle?: string;
   centered?: boolean;

@@ -1,6 +1,6 @@
 import { Modal } from 'antd';
 
-interface ConfirmModalProps {
+type ConfirmModalProps = {
   open: boolean;
   title?: string;
   message: string;

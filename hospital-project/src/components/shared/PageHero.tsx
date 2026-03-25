@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom';
 
-interface Breadcrumb {
+type Breadcrumb = {
   label: string;
   path?: string;
 }
 
-interface PageHeroProps {
+type PageHeroProps = {
   title: string;
   subtitle?: string;
   breadcrumbs?: Breadcrumb[];

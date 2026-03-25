@@ -1,7 +1,7 @@
 import { Drawer } from 'antd';
 import type { ReactNode } from 'react';
 
-interface FormDrawerProps {
+type FormDrawerProps = {
   open: boolean;
   title: string;
   onClose: () => void;

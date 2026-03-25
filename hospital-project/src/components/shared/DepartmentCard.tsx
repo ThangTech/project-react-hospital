@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 
-interface DepartmentCardProps {
+type DepartmentCardProps = {
   id: string;
   name: string;
   type?: string;

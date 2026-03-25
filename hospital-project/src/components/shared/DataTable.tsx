@@ -3,7 +3,7 @@ import type { ColumnType } from 'antd/es/table';
 
 export type { ColumnType };
 
-interface DataTableProps<T extends object> {
+type DataTableProps<T extends object> = {
   columns: ColumnType<T>[];
   data: T[];
   loading?: boolean;
