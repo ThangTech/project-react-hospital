@@ -1,11 +1,12 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, Route, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { StyleProvider } from '@ant-design/cssinjs'
 import './index.css'
 import App from './App.tsx'
 import ErrorPage from './pages/errors/error.tsx'
 import NotFoundPage from './pages/errors/notFound.tsx'
+import LoginPage from './pages/LoginPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ const router = createBrowserRouter([
       //{ index: true, element: <HomePage /> },
       //{ path: 'doctor', element: <DoctorPage /> },
     ],
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
   },
   {
     path: '*',
