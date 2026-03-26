@@ -3,6 +3,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Flex, Form, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/api.auth.service';
+import backgroundImg from '../assets/background.jpg';
 
 type LoginFormValues = {
   TenDangNhap: string;
@@ -27,34 +28,76 @@ const LoginPage = () => {
         navigate('/dashboard');
       }
     } catch {
-      // message lỗi sẽ xử lý sau
+
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="w-full max-w-sm">
-        <h2 className="text-center text-2xl font-bold text-gray-800 mb-6">Đăng nhập</h2>
+    <div className="flex w-full min-h-screen">
 
-        <Form
-          name="login"
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-        >
+
+      <div
+        className="hidden md:flex flex-1 flex-col justify-end p-10 relative"
+        style={{ backgroundImage: `url(${backgroundImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+      >
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to top, rgba(10,61,98,0.92) 30%, rgba(10,61,98,0.3) 100%)' }} />
+        <div className="relative z-10">
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-4 text-xs"
+            style={{ background: 'rgba(255,255,255,0.12)', border: '0.5px solid rgba(255,255,255,0.25)', color: '#a8d8ea' }}
+          >
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="#a8d8ea" strokeWidth="1.5">
+              <path d="M8 2L3 4.5V9c0 2.8 2.2 4.8 5 5.5 2.8-.7 5-2.7 5-5.5V4.5L8 2z" />
+            </svg>
+            Được chứng nhận Bộ Y tế
+          </div>
+          <h1
+            className="text-white text-3xl font-semibold leading-snug mb-3"
+            style={{ fontFamily: 'Georgia, serif' }}
+          >
+            Hãy tin tưởng<br />vào chúng tôi
+          </h1>
+          <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            Đội ngũ y bác sĩ giàu kinh nghiệm,<br />luôn đồng hành cùng sức khỏe của bạn.
+          </p>
+        </div>
+      </div>
+
+      <div className="w-full md:w-80 bg-white flex flex-col justify-center px-8 py-10">
+        <div className="flex items-center gap-2 mb-8">
+          <div
+            className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+            style={{ background: '#0a3d62' }}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1.8">
+              <path d="M12 2a10 10 0 100 20A10 10 0 0012 2z" />
+              <path d="M12 8v8M8 12h8" />
+            </svg>
+          </div>
+          <div>
+            <div className="text-sm font-medium text-gray-800">Bệnh viện Đa khoa</div>
+            <div className="text-xs text-gray-400">Hệ thống quản lý nội bộ</div>
+          </div>
+        </div>
+
+        <h2 className="text-xl font-medium text-gray-800 mb-1">Đăng nhập</h2>
+        <p className="text-sm text-gray-400 mb-6">Chào mừng trở lại, vui lòng đăng nhập</p>
+
+        <Form name="login" initialValues={{ remember: true }} onFinish={onFinish}>
           <Form.Item
             name="TenDangNhap"
             rules={[{ required: true, message: 'Vui lòng nhập tên đăng nhập' }]}
           >
-            <Input prefix={<UserOutlined />} placeholder="Tên đăng nhập" />
+            <Input prefix={<UserOutlined />} placeholder="Tên đăng nhập" size="middle" />
           </Form.Item>
 
           <Form.Item
             name="MatKhau"
             rules={[{ required: true, message: 'Vui lòng nhập mật khẩu' }]}
           >
-            <Input prefix={<LockOutlined />} type="password" placeholder="Mật khẩu" />
+            <Input.Password prefix={<LockOutlined />} placeholder="Mật khẩu" size="middle" />
           </Form.Item>
 
           <Form.Item>
@@ -62,16 +105,26 @@ const LoginPage = () => {
               <Form.Item name="remember" valuePropName="checked" noStyle>
                 <Checkbox>Ghi nhớ đăng nhập</Checkbox>
               </Form.Item>
-              <a href="/forgot-password">Quên mật khẩu?</a>
+              <a href="/forgot-password" className="text-xs" style={{ color: '#185FA5' }}>
+                Quên mật khẩu?
+              </a>
             </Flex>
           </Form.Item>
 
           <Form.Item>
-            <Button block type="primary" htmlType="submit" loading={loading}>
+            <Button
+              block
+              htmlType="submit"
+              loading={loading}
+              style={{ background: '#0a3d62', borderColor: '#0a3d62', color: '#fff', fontWeight: 500 }}
+            >
               Đăng nhập
             </Button>
-            <div className="text-center mt-2 text-sm">
-              hoặc <a href="/register">Yêu cầu tạo tài khoản</a>
+            <div className="text-center mt-3 text-xs text-gray-400">
+              hoặc{' '}
+              <a href="/register" style={{ color: '#185FA5' }}>
+                Yêu cầu tạo tài khoản
+              </a>
             </div>
           </Form.Item>
         </Form>
