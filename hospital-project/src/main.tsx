@@ -8,6 +8,11 @@ import App from './App.tsx'
 import ErrorPage from './pages/errors/error.tsx'
 import NotFoundPage from './pages/errors/notFound.tsx'
 import LoginPage from './pages/LoginPage.tsx'
+import HomePage from './pages/HomePage.tsx'
+import DoctorPage from './pages/DoctorPage.tsx'
+import DepartmentPage from './pages/DepartmentPage.tsx'
+import ServicePage from './pages/ServicePage.tsx'
+import ContactPage from './pages/ContactPage.tsx'
 
 const router = createBrowserRouter([
   {
@@ -15,9 +20,11 @@ const router = createBrowserRouter([
     element: <App />,
     errorElement: <ErrorPage />,
     children: [
-      //mỗi page mới sẽ được thêm vào đây
-      //{ index: true, element: <HomePage /> },
-      //{ path: 'doctor', element: <DoctorPage /> },
+      { index: true, element: <HomePage /> },
+      { path: 'bac-si', element: <DoctorPage /> },
+      { path: 'khoa-phong', element: <DepartmentPage /> },
+      { path: 'dich-vu', element: <ServicePage /> },
+      { path: 'lien-he', element: <ContactPage /> },
     ],
   },
   {
