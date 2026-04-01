@@ -16,6 +16,7 @@ import ContactPage from "./pages/ContactPage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
 import RegisterPage from "./pages/RegisterPage.tsx";
 import ForgotPasswordPage from "./pages/ForgotPassword.tsx";
+import { RecoilRoot } from "recoil";
 
 const router = createBrowserRouter([
   {
@@ -36,12 +37,12 @@ const router = createBrowserRouter([
     element: <LoginPage />,
   },
   {
-       path: "/register",
-       element: <RegisterPage/>
+    path: "/register",
+    element: <RegisterPage />,
   },
   {
-       path: "/forgot-password",
-       element: <ForgotPasswordPage />
+    path: "/forgot-password",
+    element: <ForgotPasswordPage />,
   },
   {
     path: "*",
@@ -55,7 +56,9 @@ createRoot(document.getElementById("root")!).render(
         → Tailwind utilities sẽ thắng antd khi conflict */}
     <StyleProvider layer>
       <ConfigProvider>
-        <RouterProvider router={router} />
+        <RecoilRoot>
+          <RouterProvider router={router} />
+        </RecoilRoot>
       </ConfigProvider>
     </StyleProvider>
   </StrictMode>,
