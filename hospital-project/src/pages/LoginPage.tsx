@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Flex, Form, Input } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { Button, Checkbox, Flex, Form, Input} from 'antd';
+import { useNavigate, Link } from 'react-router-dom';
 import { authService } from '../services/api.auth.service';
 import backgroundImg from '../assets/background.jpg';
 
@@ -36,8 +36,6 @@ const LoginPage = () => {
 
   return (
     <div className="flex w-full min-h-screen">
-
-
       <div
         className="hidden md:flex flex-1 flex-col justify-end p-10 relative"
         style={{ backgroundImage: `url(${backgroundImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
@@ -65,7 +63,7 @@ const LoginPage = () => {
         </div>
       </div>
 
-      <div className="w-full md:w-80 bg-white flex flex-col justify-center px-8 py-10">
+      <div className="w-full md:w-120 bg-white flex flex-col justify-center px-8 py-10">
         <div className="flex items-center gap-2 mb-8">
           <div
             className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
@@ -105,9 +103,9 @@ const LoginPage = () => {
               <Form.Item name="remember" valuePropName="checked" noStyle>
                 <Checkbox>Ghi nhớ đăng nhập</Checkbox>
               </Form.Item>
-              <a href="/forgot-password" className="text-xs" style={{ color: '#185FA5' }}>
+              <Link to="/forgot-password" className="text-xs" style={{ color: '#185FA5' }}>
                 Quên mật khẩu?
-              </a>
+              </Link>
             </Flex>
           </Form.Item>
 
@@ -122,9 +120,9 @@ const LoginPage = () => {
             </Button>
             <div className="text-center mt-3 text-xs text-gray-400">
               hoặc{' '}
-              <a href="/register" style={{ color: '#185FA5' }}>
+              <Link to="/register" style={{ color: '#185FA5' }}>
                 Yêu cầu tạo tài khoản
-              </a>
+              </Link>
             </div>
           </Form.Item>
         </Form>

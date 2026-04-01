@@ -28,7 +28,7 @@ const DoctorPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // TODO: Thay bằng API — doctorService.getAll()
+    
     setDoctors(MOCK_DOCTORS);
     setLoading(false);
   }, []);
@@ -48,7 +48,7 @@ const DoctorPage = () => {
       <section className="max-w-7xl mx-auto px-6 py-16">
         <SectionTitle title="Danh Sách Bác Sĩ" subtitle="Đội ngũ" centered />
 
-        {/* Tabs lọc theo khoa */}
+        
         <div className="flex flex-wrap gap-2 justify-center mb-10">
           {ALL_DEPARTMENTS.map((dept) => (
             <button

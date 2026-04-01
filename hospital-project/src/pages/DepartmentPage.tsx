@@ -26,7 +26,6 @@ const DepartmentPage = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // TODO: Thay bằng API — departmentService.getAll()
     setDepartments(MOCK_DEPARTMENTS);
     setLoading(false);
   }, []);

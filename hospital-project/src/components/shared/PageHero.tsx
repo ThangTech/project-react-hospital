@@ -13,8 +13,8 @@ type PageHeroProps = {
 
 const PageHero = ({ title, subtitle, breadcrumbs = [] }: PageHeroProps) => {
   return (
-    <section className="bg-blue-700 py-12 px-6">
-      {/* Breadcrumb */}
+    <section className="bg-regal-blue py-12 px-6">
+
       {breadcrumbs.length > 0 && (
         <nav className="text-sm text-blue-200 mb-3 flex items-center gap-1 flex-wrap">
           <Link to="/" className="hover:text-white">Home</Link>
