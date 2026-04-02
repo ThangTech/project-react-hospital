@@ -1,8 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
 
-const BASE_URL = 'http://localhost:5076/gateway/api/auth';
+const BASE_URL = "http://localhost:5076/gateway/api/auth";
 
-// --- Types ---
 type LoginPayload = {
   TenDangNhap: string;
   MatKhau: string;
@@ -11,10 +10,24 @@ type LoginPayload = {
 type RegisterPayload = {
   TenDangNhap: string;
   MatKhau: string;
-  VaiTro: string; // 'Admin' | 'BacSi' | 'YTa' | 'KeToan'
+  VaiTro: string;
 };
 
-// --- API calls ---
+type ForgotPasswordPayload = {
+  TenDangNhap: string;
+};
+
+type ResetPasswordPayload = {
+  TenDangNhap: string;
+  ResetToken: string;
+  MatKhauMoi: string;
+};
+
+type ChangePasswordPayload = {
+  MatKhauCu: string;
+  MatKhauMoi: string;
+};
+
 export const authService = {
   login: (payload: LoginPayload) =>
     axios.post(`${BASE_URL}/login`, payload),
@@ -24,6 +37,17 @@ export const authService = {
 
   getMe: (token: string) =>
     axios.get(`${BASE_URL}/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    }),
+
+  forgotPassword: (payload: ForgotPasswordPayload) =>
+    axios.post(`${BASE_URL}/forgot-password`, payload),
+
+  resetPassword: (payload: ResetPasswordPayload) =>
+    axios.post(`${BASE_URL}/reset-password`, payload),
+
+  changePassword: (payload: ChangePasswordPayload, token: string) =>
+    axios.post(`${BASE_URL}/change-password`, payload, {
       headers: { Authorization: `Bearer ${token}` },
     }),
 };
