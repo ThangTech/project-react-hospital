@@ -26,24 +26,33 @@ const ForgotPasswordPage = () => {
       <div className="w-full md:w-120 bg-white flex flex-col justify-center px-8 py-10">
         <h2 className="text-xl font-medium text-gray-800 mb-1">Quên mật khẩu</h2>
         <p className="text-sm text-gray-400 mb-5">
-          {step === 0 ? "Nhập tên đăng nhập để nhận mã xác nhận" : "Nhập mã xác nhận và mật khẩu mới"}
+          {step === 0 && "Nhập email để nhận mã OTP xác nhận"}
+          {step === 1 && "Nhập mã OTP 6 số đã được gửi tới email"}
+          {step === 2 && "Tạo mật khẩu mới cho tài khoản"}
         </p>
 
         <Steps
           current={step}
           size="small"
           className="mb-6"
-          items={[{ title: "Xác minh" }, { title: "Đặt lại" }]}
+          items={[{ title: "Email" }, { title: "Xác minh OTP" }, { title: "Đặt lại" }]}
         />
 
         {step === 0 && (
           <Form layout="vertical" requiredMark={false}>
-            <Form.Item name="TenDangNhap" label="Tên đăng nhập" rules={[{ required: true, message: "Vui lòng nhập tên đăng nhập" }]}>
-              <Input placeholder="Tên đăng nhập của bạn" />
+            <Form.Item
+              name="Email"
+              label="Email đã đăng ký"
+              rules={[
+                { required: true, message: "Vui lòng nhập email" },
+                { type: "email", message: "Email không hợp lệ" },
+              ]}
+            >
+              <Input placeholder="example@hospital.com" type="email" />
             </Form.Item>
             <Form.Item>
               <Button block onClick={() => setStep(1)} style={{ background: "#0a3d62", borderColor: "#0a3d62", color: "#fff", fontWeight: 500 }}>
-                Tiếp theo
+                Gửi mã OTP
               </Button>
               <div className="text-center mt-3 text-xs text-gray-400">
                 <Link to="/login" style={{ color: "#185FA5" }}>← Quay lại đăng nhập</Link>
@@ -54,11 +63,37 @@ const ForgotPasswordPage = () => {
 
         {step === 1 && (
           <Form layout="vertical" requiredMark={false}>
-            <Form.Item name="ResetToken" label="Mã xác nhận" rules={[{ required: true, message: "Vui lòng nhập mã xác nhận" }]}>
-              <Input placeholder="Mã reset password" />
+            <Form.Item
+              name="OtpCode"
+              label="Mã OTP (6 số)"
+              rules={[
+                { required: true, message: "Vui lòng nhập mã OTP" },
+                { len: 6, message: "Mã OTP phải đúng 6 chữ số" },
+                { pattern: /^\d{6}$/, message: "Mã OTP chỉ gồm chữ số" },
+              ]}
+            >
+              <Input placeholder="Nhập 6 chữ số" maxLength={6} />
             </Form.Item>
+            <Form.Item>
+              <div className="flex gap-3">
+                <Button block onClick={() => setStep(0)} style={{ borderColor: "#d1d5db", color: "#6b7280" }}>
+                  Quay lại
+                </Button>
+                <Button block onClick={() => setStep(2)} style={{ background: "#0a3d62", borderColor: "#0a3d62", color: "#fff", fontWeight: 500 }}>
+                  Xác minh
+                </Button>
+              </div>
+            </Form.Item>
+          </Form>
+        )}
 
-            <Form.Item name="MatKhauMoi" label="Mật khẩu mới" rules={[{ required: true, message: "Vui lòng nhập mật khẩu mới" }, { min: 6, message: "Tối thiểu 6 ký tự" }]}>
+        {step === 2 && (
+          <Form layout="vertical" requiredMark={false}>
+            <Form.Item
+              name="MatKhauMoi"
+              label="Mật khẩu mới"
+              rules={[{ required: true, message: "Vui lòng nhập mật khẩu mới" }, { min: 6, message: "Tối thiểu 6 ký tự" }]}
+            >
               <Input.Password placeholder="Tối thiểu 6 ký tự" />
             </Form.Item>
 
@@ -81,7 +116,7 @@ const ForgotPasswordPage = () => {
 
             <Form.Item>
               <div className="flex gap-3">
-                <Button block onClick={() => setStep(0)} style={{ borderColor: "#d1d5db", color: "#6b7280" }}>
+                <Button block onClick={() => setStep(1)} style={{ borderColor: "#d1d5db", color: "#6b7280" }}>
                   Quay lại
                 </Button>
                 <Button block htmlType="submit" style={{ background: "#0a3d62", borderColor: "#0a3d62", color: "#fff", fontWeight: 500 }}>

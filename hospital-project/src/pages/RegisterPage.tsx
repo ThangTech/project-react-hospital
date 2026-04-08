@@ -36,6 +36,17 @@ const RegisterPage = () => (
           <Input placeholder="vd: nguyen_van_a" />
         </Form.Item>
 
+        <Form.Item
+          name="Email"
+          label="Email"
+          rules={[
+            { required: true, message: "Vui lòng nhập email" },
+            { type: "email", message: "Email không hợp lệ" },
+          ]}
+        >
+          <Input placeholder="vd: example@hospital.com" type="email" />
+        </Form.Item>
+
         <Form.Item name="VaiTro" label="Vai trò" rules={[{ required: true, message: "Vui lòng chọn vai trò" }]}>
           <Select placeholder="Chọn vai trò" options={ROLES} />
         </Form.Item>
