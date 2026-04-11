@@ -1,17 +1,11 @@
 import { Link } from "react-router-dom";
+import type { KhoaPhong } from "../../types";
 
-type Service = { name: string; desc: string };
+type Props = {
+  departments: KhoaPhong[];
+};
 
-const SERVICES: Service[] = [
-  { name: "Nội khoa tổng quát", desc: "Khám và điều trị các bệnh lý nội khoa thường gặp với đội ngũ bác sĩ giàu kinh nghiệm." },
-  { name: "Ngoại khoa", desc: "Phẫu thuật và can thiệp ngoại khoa với trang thiết bị hiện đại, quy trình an toàn." },
-  { name: "Tim mạch — Lồng ngực", desc: "Chẩn đoán và điều trị chuyên sâu các bệnh lý tim mạch và lồng ngực." },
-  { name: "Nhi khoa", desc: "Chăm sóc sức khỏe toàn diện cho trẻ em từ sơ sinh đến 15 tuổi." },
-  { name: "Sản phụ khoa", desc: "Theo dõi thai kỳ, hỗ trợ sinh sản và chăm sóc sức khỏe phụ nữ." },
-  { name: "Thần kinh học", desc: "Điều trị chuyên sâu các bệnh lý thần kinh trung ương và ngoại biên." },
-];
-
-const ServicesSection = () => (
+const ServicesSection = ({ departments }: Props) => (
   <section className="py-24 bg-white">
     <div className="max-w-7xl mx-auto px-6">
       <div className="text-center mb-14">
@@ -22,15 +16,15 @@ const ServicesSection = () => (
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {SERVICES.map((svc) => (
+        {departments.slice(0, 6).map((dept) => (
           <article
-            key={svc.name}
+            key={dept.id}
             className="p-7 border border-gray-100 rounded-2xl hover:shadow-lg hover:border-blue-100 transition-all duration-200 group"
           >
             <div className="w-8 h-0.5 bg-[#005b96] mb-5 group-hover:w-14 transition-all duration-300" />
-            <h3 className="font-bold text-lg text-gray-900 mb-3">{svc.name}</h3>
-            <p className="text-gray-500 text-sm leading-relaxed mb-5">{svc.desc}</p>
-            <Link to="/service" className="text-[#005b96] text-sm font-semibold hover:underline">
+            <h3 className="font-bold text-lg text-gray-900 mb-3">{dept.tenKhoa}</h3>
+            <p className="text-gray-500 text-sm leading-relaxed mb-5">{dept.loaiKhoa}</p>
+            <Link to="/department" className="text-[#005b96] text-sm font-semibold hover:underline">
               Xem thêm →
             </Link>
           </article>
