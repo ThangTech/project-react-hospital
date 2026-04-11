@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button, Form, Input, Steps } from "antd";
-import backgroundImg from "../assets/background.jpg";
+import backgroundImg from "../../assets/background.jpg";
 
 const ForgotPasswordPage = () => {
   const [step, setStep] = useState(0);

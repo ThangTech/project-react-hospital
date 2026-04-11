@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Flex, Form, Input} from 'antd';
 import { useNavigate, Link } from 'react-router-dom';
-import { authService } from '../services/api.auth.service';
-import backgroundImg from '../assets/background.jpg';
+import { authService } from '../../services/api.auth.service';
+import backgroundImg from '../../assets/background.jpg';
 
 type LoginFormValues = {
   TenDangNhap: string;

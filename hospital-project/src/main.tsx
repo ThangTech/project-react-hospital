@@ -7,15 +7,15 @@ import "./index.css";
 import App from "./App.tsx";
 import ErrorPage from "./pages/errors/error.tsx";
 import NotFoundPage from "./pages/errors/notFound.tsx";
-import LoginPage from "./pages/LoginPage.tsx";
+import LoginPage from "./pages/auth/LoginPage.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import DoctorPage from "./pages/DoctorPage.tsx";
 import DepartmentPage from "./pages/DepartmentPage.tsx";
 import ServicePage from "./pages/ServicePage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
-import RegisterPage from "./pages/RegisterPage.tsx";
-import ForgotPasswordPage from "./pages/ForgotPassword.tsx";
+import RegisterPage from "./pages/auth/RegisterPage.tsx";
+import ForgotPasswordPage from "./pages/auth/ForgotPassword.tsx";
 import { RecoilRoot } from "recoil";
 
 const router = createBrowserRouter([

@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Button, Form, Input, Select } from "antd";
-import backgroundImg from "../assets/background.jpg";
+import backgroundImg from "../../assets/background.jpg";
 
 const ROLES = [
   { value: "BenhNhan", label: "Bệnh nhân" },
