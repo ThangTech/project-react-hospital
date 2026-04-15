@@ -1,7 +1,7 @@
 
 ## Live Demo
 Bản deploy chính thức của dự án:
- **[https://project-react-hospital.vercel.app/](https://project-react-hospital.vercel.app/)**
+ **[https://project-react-hospital.vercel.app/](https://project-react-hospital.vercel.app)**
 
 ---
 
