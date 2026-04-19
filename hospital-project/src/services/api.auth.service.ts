@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const BASE_URL = "http://localhost:5076/gateway/api/auth";
+import axios from "./axios.interceptor";
 
 type LoginPayload = {
   TenDangNhap: string;
