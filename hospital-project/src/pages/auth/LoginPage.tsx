@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Flex, Form, Input} from 'antd';
 import { useNavigate, Link } from 'react-router-dom';
-import { authService } from '../../services/api.auth.service';
 import backgroundImg from '../../assets/background.jpg';
+import { loginAccount } from '../../services/api.auth.service';
 
 type LoginFormValues = {
   TenDangNhap: string;
@@ -18,14 +18,15 @@ const LoginPage = () => {
   const onFinish = async (values: LoginFormValues) => {
     try {
       setLoading(true);
-      const res = await authService.login({
+      const res = await loginAccount({
         TenDangNhap: values.TenDangNhap,
         MatKhau: values.MatKhau,
       });
-      const token = res.data?.data?.token;
+      const token = res.data?.token;
       if (token) {
         localStorage.setItem('token', token);
-        navigate('/dashboard');
+       //  navigate('/dashboard');
+        navigate('/');
       }
     } catch {
 
