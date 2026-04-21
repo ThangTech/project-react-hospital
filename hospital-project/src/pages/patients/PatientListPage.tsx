@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import type { BenhNhan } from "../../types";
 import { Table } from "antd";
 const PatientListPage = () => {
+       const [phone, setPhone] = useState('');
        const [dataPatients, setDataPatients] = useState<BenhNhan[]>([]);
        const getAll = async () => {
               const res = await getAllPatients();
@@ -124,13 +125,18 @@ const PatientListPage = () => {
                                           prefix={<SearchOutlined />}
                                           placeholder="Nhập số điện thoại"
                                           style={{ width: 200 }}
+                                          maxLength={11}
+                                          onChange={(e) => {
+                                                 const value = e.target.value.replace(/[^0-9]/g, '');
+                                                 setPhone(value);
+                                          }}
                                    />
                             </div>
-                            <div style={{ display: 'flex',justifyContent: "flex-end", gap: 8, width: '100%' }}>
-                                    <Button icon={<PlusOutlined/>}type="primary">Tạo mới</Button>
-                                    <Button icon={<ReloadOutlined/>}type="primary">Đặt lại</Button>
-                                    <Button icon={<UploadOutlined />}>Nhập Excel</Button>
-                                    <Button icon={<DownloadOutlined />}>Xuất Excel</Button>
+                            <div style={{ display: 'flex', justifyContent: "flex-end", gap: 8, width: '100%' }}>
+                                   <Button icon={<PlusOutlined />} type="primary">Tạo mới</Button>
+                                   <Button icon={<ReloadOutlined />} type="primary">Đặt lại</Button>
+                                   <Button icon={<UploadOutlined />}>Nhập Excel</Button>
+                                   <Button icon={<DownloadOutlined />}>Xuất Excel</Button>
                             </div>
                      </div>
                      <Table
