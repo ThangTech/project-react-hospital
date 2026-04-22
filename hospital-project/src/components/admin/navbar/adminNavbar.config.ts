@@ -2,7 +2,7 @@
 // Cấu hình tĩnh: menu items, sub-items, và phân quyền theo role.
 // Tách riêng để dễ thêm/sửa menu mà không cần đụng vào component.
 
-import type { UserRole } from '../../../store/atoms/authAtom';
+import type { UserRole } from '../../../context/AuthContext';
 
 export type NavChild = {
   label: string;

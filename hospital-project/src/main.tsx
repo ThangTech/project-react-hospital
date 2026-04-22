@@ -3,12 +3,15 @@ import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { StyleProvider } from "@ant-design/cssinjs";
 import { ConfigProvider } from "antd";
-import { RecoilRoot } from "recoil";
+import { AuthProvider } from "./context/AuthContext";
+import { UIProvider } from "./context/UIContext";
 import "./index.css";
 
+// Layouts
 import App from "./App.tsx";
 import AdminLayout from "./components/layout/AdminLayout.tsx";
 
+// Public pages
 import HomePage from "./pages/HomePage.tsx";
 import DoctorPage from "./pages/DoctorPage.tsx";
 import DepartmentPage from "./pages/DepartmentPage.tsx";
@@ -16,13 +19,16 @@ import ServicePage from "./pages/ServicePage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
 
+// Auth pages
 import LoginPage from "./pages/auth/LoginPage.tsx";
 import RegisterPage from "./pages/auth/RegisterPage.tsx";
 import ForgotPasswordPage from "./pages/auth/ForgotPassword.tsx";
 
+// Error pages
 import ErrorPage from "./pages/errors/error.tsx";
 import NotFoundPage from "./pages/errors/notFound.tsx";
 
+// Admin pages
 import AdminDashboard from "./pages/dashboard/AdminDashboard.tsx";
 import DoctorDashboard from "./pages/dashboard/DoctorDashboard.tsx";
 import NurseDashboard from "./pages/dashboard/NurseDashboard.tsx";
@@ -37,6 +43,7 @@ import InvoiceListPage from "./pages/invoices/InvoiceListPage.tsx";
 import ReportPage from "./pages/reports/ReportPage.tsx";
 
 const router = createBrowserRouter([
+  // ═══ Public layout (Header + Footer) ═══
   {
     path: "/",
     element: <App />,
@@ -51,36 +58,27 @@ const router = createBrowserRouter([
     ],
   },
 
-
+  // ═══ Auth pages (không layout) ═══
   { path: "/login", element: <LoginPage /> },
   { path: "/register", element: <RegisterPage /> },
   { path: "/forgot-password", element: <ForgotPasswordPage /> },
 
-
+  // ═══ Admin layout (AdminNavbar, không Footer) ═══
   {
     element: <AdminLayout />,
     children: [
-      // Dashboard
-      { path: "/dashboard/admin", element: <AdminDashboard /> },
-      { path: "/dashboard/doctor", element: <DoctorDashboard /> },
-      { path: "/dashboard/nurse", element: <NurseDashboard /> },
+      { path: "/dashboard/admin",      element: <AdminDashboard /> },
+      { path: "/dashboard/doctor",     element: <DoctorDashboard /> },
+      { path: "/dashboard/nurse",      element: <NurseDashboard /> },
       { path: "/dashboard/accountant", element: <AccountantDashboard /> },
-
-      // Quản lý bệnh nhân
-      { path: "/patients", element: <PatientListPage /> },
-      { path: "/patients/:id", element: <PatientDetailPage /> },
-      { path: "/admissions", element: <AdmissionListPage /> },
-
-      // Quản lý ca khám
-      { path: "/medical-records", element: <MedicalRecordListPage /> },
-      { path: "/surgeries", element: <SurgeryListPage /> },
-
-      // Quản lý giường bệnh
-      { path: "/beds", element: <BedListPage /> },
-
-      // Hóa đơn & Báo cáo
-      { path: "/invoices", element: <InvoiceListPage /> },
-      { path: "/reports", element: <ReportPage /> },
+      { path: "/patients",             element: <PatientListPage /> },
+      { path: "/patients/:id",         element: <PatientDetailPage /> },
+      { path: "/admissions",           element: <AdmissionListPage /> },
+      { path: "/medical-records",      element: <MedicalRecordListPage /> },
+      { path: "/surgeries",            element: <SurgeryListPage /> },
+      { path: "/beds",                 element: <BedListPage /> },
+      { path: "/invoices",             element: <InvoiceListPage /> },
+      { path: "/reports",              element: <ReportPage /> },
     ],
   },
 
@@ -92,9 +90,12 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <StyleProvider layer>
       <ConfigProvider>
-        <RecoilRoot>
-          <RouterProvider router={router} />
-        </RecoilRoot>
+        {/* AuthProvider + UIProvider thay thế RecoilRoot */}
+        <AuthProvider>
+          <UIProvider>
+            <RouterProvider router={router} />
+          </UIProvider>
+        </AuthProvider>
       </ConfigProvider>
     </StyleProvider>
   </StrictMode>,

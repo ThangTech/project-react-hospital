@@ -22,7 +22,7 @@ const PatientListPage = () => {
                      render: (_: any, __: any, index: number) => index + 1,
               },
               {
-                     title: 'ID',
+                     title: 'Mã BN',
                      dataIndex: 'id',
                      width: 300,
                      align: 'center' as const,
@@ -67,7 +67,7 @@ const PatientListPage = () => {
               {
                      title: 'Trạng thái',
                      dataIndex: 'trangThai',
-                     width: 120,
+                     width: 200,
                      align: 'center' as const,
                      render: (value: any) => {
                             const color = value === 'Đang điều trị' ? 'blue' : 'green';

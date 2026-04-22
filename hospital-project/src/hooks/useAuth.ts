@@ -1,38 +1,28 @@
-import { useRecoilState, useRecoilValue } from "recoil";
-import { authAtom } from "../store/atoms/authAtom";
-import type { AuthUser } from "../store/atoms/authAtom";
-import {
-  isAdminSelector,
-  isDoctorSelector,
-  isNurseSelector,
-  isAccountantSelector,
-  isPatientSelector,
-  userRoleSelector,
-} from "../store/selectors/authSelectors";
+// ─── useAuth.ts ───────────────────────────────────────────
+// Custom hook bọc AuthContext — API giữ nguyên như cũ.
+// Các component dùng useAuth() không cần thay đổi gì.
+
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 export const useAuth = () => {
-  const [auth, setAuth] = useRecoilState(authAtom);
-  const role = useRecoilValue(userRoleSelector);
-  const isAdmin = useRecoilValue(isAdminSelector);
-  const isDoctor = useRecoilValue(isDoctorSelector);
-  const isNurse = useRecoilValue(isNurseSelector);
-  const isAccountant = useRecoilValue(isAccountantSelector);
-  const isPatient = useRecoilValue(isPatientSelector);
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth phải dùng bên trong <AuthProvider>');
 
-  const login = (token: string, user: AuthUser) => {
-    localStorage.setItem("token", token);
-    setAuth({ user, token, isAuthenticated: true });
-  };
+  const { user, token, isAuthenticated, login, logout } = ctx;
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    setAuth({ user: null, token: null, isAuthenticated: false });
-  };
+  // Các computed values từ role (thay cho Recoil selectors)
+  const role = user?.role ?? null;
+  const isAdmin       = role === 'Admin';
+  const isDoctor      = role === 'BacSi';
+  const isNurse       = role === 'YTa';
+  const isAccountant  = role === 'KeToan';
+  const isPatient     = role === 'BenhNhan';
 
   return {
-    user: auth.user,
-    token: auth.token,
-    isAuthenticated: auth.isAuthenticated,
+    user,
+    token,
+    isAuthenticated,
     role,
     isAdmin,
     isDoctor,

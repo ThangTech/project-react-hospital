@@ -1,14 +1,11 @@
-import { useRecoilState } from "recoil";
-import { sidebarCollapsedAtom, globalLoadingAtom } from "../store/atoms/uiAtom";
+// ─── useUI.ts ─────────────────────────────────────────────
+// Custom hook bọc UIContext — API giữ nguyên như cũ.
+
+import { useContext } from 'react';
+import { UIContext } from '../context/UIContext';
 
 export const useUI = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useRecoilState(sidebarCollapsedAtom);
-  const [globalLoading, setGlobalLoading] = useRecoilState(globalLoadingAtom);
-
-  return {
-    sidebarCollapsed,
-    globalLoading,
-    toggleSidebar: () => setSidebarCollapsed((v) => !v),
-    setGlobalLoading,
-  };
+  const ctx = useContext(UIContext);
+  if (!ctx) throw new Error('useUI phải dùng bên trong <UIProvider>');
+  return ctx;
 };

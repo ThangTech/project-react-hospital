@@ -5,23 +5,22 @@
 import { useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ChevronDown, KeyRound, LogOut } from 'lucide-react';
-import { useSetRecoilState } from 'recoil';
-import { authAtom } from '../../../store/atoms/authAtom';
+import { useAuth } from '../../../hooks/useAuth';
 
 type Props = {
   userName: string;
   userRole: string;
   isOpen: boolean;
-  onToggle: () => void;   // Click avatar → toggle dropdown
-  onClose: () => void;    // Click bên ngoài → đóng
+  onToggle: () => void;
+  onClose: () => void;
 };
 
 const NavUserMenu = ({ userName, userRole, isOpen, onToggle, onClose }: Props) => {
   const navigate = useNavigate();
-  const setAuth = useSetRecoilState(authAtom);
+  const { logout } = useAuth();
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Đóng dropdown khi click ra ngoài vùng component
+  // Đóng dropdown khi click ra ngoài
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -33,8 +32,7 @@ const NavUserMenu = ({ userName, userRole, isOpen, onToggle, onClose }: Props) =
   }, [onClose]);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    setAuth({ user: null, token: null, isAuthenticated: false });
+    logout();           // xóa localStorage + reset context state
     navigate('/login');
   };
 
