@@ -5,18 +5,24 @@ import { StyleProvider } from "@ant-design/cssinjs";
 import { ConfigProvider } from "antd";
 import { RecoilRoot } from "recoil";
 import "./index.css";
+
 import App from "./App.tsx";
-import ErrorPage from "./pages/errors/error.tsx";
-import NotFoundPage from "./pages/errors/notFound.tsx";
+import AdminLayout from "./components/layout/AdminLayout.tsx";
+
 import HomePage from "./pages/HomePage.tsx";
 import DoctorPage from "./pages/DoctorPage.tsx";
 import DepartmentPage from "./pages/DepartmentPage.tsx";
 import ServicePage from "./pages/ServicePage.tsx";
 import BlogPage from "./pages/BlogPage.tsx";
 import ContactPage from "./pages/ContactPage.tsx";
+
 import LoginPage from "./pages/auth/LoginPage.tsx";
 import RegisterPage from "./pages/auth/RegisterPage.tsx";
 import ForgotPasswordPage from "./pages/auth/ForgotPassword.tsx";
+
+import ErrorPage from "./pages/errors/error.tsx";
+import NotFoundPage from "./pages/errors/notFound.tsx";
+
 import AdminDashboard from "./pages/dashboard/AdminDashboard.tsx";
 import DoctorDashboard from "./pages/dashboard/DoctorDashboard.tsx";
 import NurseDashboard from "./pages/dashboard/NurseDashboard.tsx";
@@ -37,83 +43,53 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: "/doctor", element: <DoctorPage /> },
-      { path: "/department", element: <DepartmentPage /> },
-      { path: "/service", element: <ServicePage /> },
-      { path: "/blog", element: <BlogPage /> },
-      { path: "/contact", element: <ContactPage /> },
+      { path: "doctor", element: <DoctorPage /> },
+      { path: "department", element: <DepartmentPage /> },
+      { path: "service", element: <ServicePage /> },
+      { path: "blog", element: <BlogPage /> },
+      { path: "contact", element: <ContactPage /> },
     ],
   },
+
+
+  { path: "/login", element: <LoginPage /> },
+  { path: "/register", element: <RegisterPage /> },
+  { path: "/forgot-password", element: <ForgotPasswordPage /> },
+
+
   {
-    path: "/login",
-    element: <LoginPage />,
+    element: <AdminLayout />,
+    children: [
+      // Dashboard
+      { path: "/dashboard/admin", element: <AdminDashboard /> },
+      { path: "/dashboard/doctor", element: <DoctorDashboard /> },
+      { path: "/dashboard/nurse", element: <NurseDashboard /> },
+      { path: "/dashboard/accountant", element: <AccountantDashboard /> },
+
+      // Quản lý bệnh nhân
+      { path: "/patients", element: <PatientListPage /> },
+      { path: "/patients/:id", element: <PatientDetailPage /> },
+      { path: "/admissions", element: <AdmissionListPage /> },
+
+      // Quản lý ca khám
+      { path: "/medical-records", element: <MedicalRecordListPage /> },
+      { path: "/surgeries", element: <SurgeryListPage /> },
+
+      // Quản lý giường bệnh
+      { path: "/beds", element: <BedListPage /> },
+
+      // Hóa đơn & Báo cáo
+      { path: "/invoices", element: <InvoiceListPage /> },
+      { path: "/reports", element: <ReportPage /> },
+    ],
   },
-  {
-    path: "/register",
-    element: <RegisterPage />,
-  },
-  {
-    path: "/forgot-password",
-    element: <ForgotPasswordPage />,
-  },
-  {
-    path: "/dashboard/admin",
-    element: <AdminDashboard />,
-  },
-  {
-    path: "/dashboard/doctor",
-    element: <DoctorDashboard />,
-  },
-  {
-    path: "/dashboard/nurse",
-    element: <NurseDashboard />,
-  },
-  {
-    path: "/dashboard/accountant",
-    element: <AccountantDashboard />,
-  },
-  {
-    path: "/patients",
-    element: <PatientListPage />,
-  },
-  {
-    path: "/patients/:id",
-    element: <PatientDetailPage />,
-  },
-  {
-    path: "/admissions",
-    element: <AdmissionListPage />,
-  },
-  {
-    path: "/medical-records",
-    element: <MedicalRecordListPage />,
-  },
-  {
-    path: "/beds",
-    element: <BedListPage />,
-  },
-  {
-    path: "/surgeries",
-    element: <SurgeryListPage />,
-  },
-  {
-    path: "/invoices",
-    element: <InvoiceListPage />,
-  },
-  {
-    path: "/reports",
-    element: <ReportPage />,
-  },
-  {
-    path: "*",
-    element: <NotFoundPage />,
-  },
+
+  // ═══ 404 ═══
+  { path: "*", element: <NotFoundPage /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    {/* StyleProvider layer: ép antd inject CSS vào @layer antd
-        → Tailwind utilities sẽ thắng antd khi conflict */}
     <StyleProvider layer>
       <ConfigProvider>
         <RecoilRoot>

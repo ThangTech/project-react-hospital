@@ -37,6 +37,7 @@ export type BenhNhan = {
   mucHuong: number | null;
   hanTheBHYT: string | null;
   trangThai: string;
+  avatar?: string;
 };
 
 // ─── GiuongBenh ──────────────────────────────────────────
