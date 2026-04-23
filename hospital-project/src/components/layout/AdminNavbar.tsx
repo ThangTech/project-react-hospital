@@ -1,8 +1,7 @@
 // ─── AdminNavbar.tsx ─────────────────────────────────────
 // Navbar dành riêng cho giao diện quản trị (sau đăng nhập).
-// Chỉ chứa STATE và LAYOUT — logic nằm trong sub-components.
+// Dùng Ant Design Dropdown trong các sub-component → không cần state mở/đóng ở đây.
 
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { menuConfig } from '../admin/navbar/adminNavbar.config';
@@ -11,9 +10,6 @@ import NavUserMenu from '../admin/navbar/NavUserMenu';
 import logo from '../../assets/logo.jpg';
 
 const AdminNavbar = () => {
-  const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const [userMenuOpen, setUserMenuOpen] = useState(false);
-
   const { user, role } = useAuth();
   const userRole = role ?? 'Admin';
   const userName = user?.fullName ?? 'Quản trị viên';
@@ -32,7 +28,7 @@ const AdminNavbar = () => {
             alt="Logo"
             className="h-8 w-8 rounded-full object-cover border border-white/30"
           />
-          <span className="font-bold text-sm tracking-wide hidden sm:inline">BỆNH VIỆN</span>
+          <span className="font-bold text-sm tracking-wide hidden sm:inline">QUẢN LÝ BỆNH VIỆN</span>
         </Link>
 
         {/* ── Menu chính ── */}
@@ -41,22 +37,13 @@ const AdminNavbar = () => {
             <NavMenuGroup
               key={menu.label}
               menu={menu}
-              isOpen={openMenu === menu.label}
-              onOpen={() => setOpenMenu(menu.label)}
-              onClose={() => setOpenMenu(null)}
-              onChildClick={() => setOpenMenu(null)}
+              onChildClick={() => {}}
             />
           ))}
         </div>
 
         {/* ── User section ── */}
-        <NavUserMenu
-          userName={userName}
-          userRole={userRole}
-          isOpen={userMenuOpen}
-          onToggle={() => setUserMenuOpen((prev) => !prev)}
-          onClose={() => setUserMenuOpen(false)}
-        />
+        <NavUserMenu userName={userName} userRole={userRole} />
 
       </div>
     </nav>
