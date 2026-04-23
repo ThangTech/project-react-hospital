@@ -42,6 +42,9 @@ import SurgeryListPage from "./pages/surgeries/SurgeryListPage.tsx";
 import InvoiceListPage from "./pages/invoices/InvoiceListPage.tsx";
 import ReportPage from "./pages/reports/ReportPage.tsx";
 
+// Shared components
+import ProtectedRoute from "./components/shared/ProtectedRoute.tsx";
+
 const router = createBrowserRouter([
   // ═══ Public layout (Header + Footer) ═══
   {
@@ -65,7 +68,11 @@ const router = createBrowserRouter([
 
   // ═══ Admin layout (AdminNavbar, không Footer) ═══
   {
-    element: <AdminLayout />,
+    element: (
+      <ProtectedRoute allowedRoles={["Admin", "BacSi", "YTa", "KeToan"]}>
+        <AdminLayout />
+      </ProtectedRoute>
+    ),
     children: [
       { path: "/dashboard/admin",      element: <AdminDashboard /> },
       { path: "/dashboard/doctor",     element: <DoctorDashboard /> },
