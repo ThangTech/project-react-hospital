@@ -1,11 +1,15 @@
 import { EditOutlined, DeleteOutlined, SearchOutlined, PlusOutlined, ReloadOutlined, UploadOutlined, DownloadOutlined } from "@ant-design/icons";
-import { Popconfirm, Input, DatePicker, Form, Button } from "antd";
+import { Popconfirm, Input, DatePicker, Button } from "antd";
 import { getAllPatients } from "../../services/api.patient.service";
 import { useState, useEffect } from "react";
 import type { BenhNhan } from "../../types";
 import { Table } from "antd";
+import dayjs from "dayjs";
 const PatientListPage = () => {
        const [phone, setPhone] = useState('');
+       const [name, setName] = useState('');
+       const [id, setId] = useState('');
+       const [date, setDate] = useState<string>('');
        const [dataPatients, setDataPatients] = useState<BenhNhan[]>([]);
        const getAll = async () => {
               const res = await getAllPatients();
@@ -104,20 +108,30 @@ const PatientListPage = () => {
 
               },
        ];
+       const resetInput = () => {
+              setName("");
+              setDate("");
+              setId("");
+              setPhone("");
+
+       }
        return (
               <>
                      <div style={{ display: 'flex', gap: 16, marginBottom: 16, padding: 20, background: '#f5f5f5', borderRadius: 8, alignItems: 'flex-end' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                                    <span>Tên bệnh nhân</span>
-                                   <Input placeholder="Tên bệnh nhân" style={{ width: 200 }} />
+                                   <Input placeholder="Tên bệnh nhân" style={{ width: 200 }} value={name} onChange={(event) => setName(event.target.value)} />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                                    <span>Mã bệnh nhân</span>
-                                   <Input placeholder="Mã bệnh nhân" style={{ width: 200 }} />
+                                   <Input placeholder="Mã bệnh nhân" style={{ width: 200 }}value={id} onChange={(event) => setId(event.target.value)} />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                                    <span>Năm sinh</span>
-                                   <DatePicker placeholder="Chọn ngày" style={{ width: 200 }} />
+                                   <DatePicker placeholder="Chọn ngày" style={{ width: 200 }} value={date ? dayjs(date) : null} format="YYYY-MM-DD"
+                                          onChange={(date, dateString) => {
+                                                 setDate(date ? (dateString as string) : "");
+                                          }} />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                                    <span>Số điện thoại</span>
@@ -126,6 +140,7 @@ const PatientListPage = () => {
                                           placeholder="Nhập số điện thoại"
                                           style={{ width: 200 }}
                                           maxLength={11}
+                                          value={phone}
                                           onChange={(e) => {
                                                  const value = e.target.value.replace(/[^0-9]/g, '');
                                                  setPhone(value);
@@ -134,7 +149,7 @@ const PatientListPage = () => {
                             </div>
                             <div style={{ display: 'flex', justifyContent: "flex-end", gap: 8, width: '100%' }}>
                                    <Button icon={<PlusOutlined />} type="primary">Tạo mới</Button>
-                                   <Button icon={<ReloadOutlined />} type="primary">Đặt lại</Button>
+                                   <Button icon={<ReloadOutlined/>} type="primary" onClick={resetInput}>Đặt lại</Button>
                                    <Button icon={<UploadOutlined />}>Nhập Excel</Button>
                                    <Button icon={<DownloadOutlined />}>Xuất Excel</Button>
                             </div>

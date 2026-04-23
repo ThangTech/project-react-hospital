@@ -38,6 +38,7 @@ export type BenhNhan = {
   hanTheBHYT: string | null;
   trangThai: string;
   avatar?: string;
+  daXoa?: boolean;
 };
 
 // ─── GiuongBenh ──────────────────────────────────────────
