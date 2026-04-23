@@ -30,7 +30,12 @@ const loginAccount = async(data: LoginPayload) => {
        const res = await axios.post(url, data)
        return res;
 }
-export {loginAccount}
+const getAccount = async() => {
+       const url = "/gateway/api/auth/me";
+       const res = await axios.get(url);
+       return res;
+}
+export {loginAccount, getAccount}
 // export const authService = {
 //   login: (payload: LoginPayload) =>
 //     axios.post(`${BASE_URL}/login`, payload),

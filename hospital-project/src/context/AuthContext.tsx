@@ -12,10 +12,10 @@ import { createContext, useContext, useState, type ReactNode } from 'react';
 export type UserRole = 'Admin' | 'BacSi' | 'YTa' | 'KeToan' | 'BenhNhan';
 
 export type AuthUser = {
-  id: number;
-  username: string;
-  role: UserRole;
-  fullName: string;
+    id: string;             
+    tenDangNhap: string;
+    vaiTro: UserRole;
+    email: string | null;
 };
 
 type AuthState = {
@@ -35,19 +35,26 @@ const AuthContext = createContext<AuthContextType | null>(null);
 
 // ─── Provider ────────────────────────────────────────────
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [auth, setAuth] = useState<AuthState>({
-    user: null,
-    token: localStorage.getItem('token'),
-    isAuthenticated: !!localStorage.getItem('token'),
+  const [auth, setAuth] = useState<AuthState>(() => {
+    const token = localStorage.getItem('token');
+    const userRaw = localStorage.getItem('auth_user');
+    const user: AuthUser | null = userRaw ? JSON.parse(userRaw) : null;
+    return {
+      user,
+      token,
+      isAuthenticated: !!token && !!user,
+    };
   });
 
   const login = (token: string, user: AuthUser) => {
     localStorage.setItem('token', token);
+    localStorage.setItem('auth_user', JSON.stringify(user));
     setAuth({ user, token, isAuthenticated: true });
   };
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('auth_user');
     setAuth({ user: null, token: null, isAuthenticated: false });
   };
 

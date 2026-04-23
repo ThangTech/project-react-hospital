@@ -12,7 +12,7 @@ export const useAuth = () => {
   const { user, token, isAuthenticated, login, logout } = ctx;
 
   // Các computed values từ role (thay cho Recoil selectors)
-  const role = user?.role ?? null;
+  const role = user?.vaiTro ?? null;
   const isAdmin       = role === 'Admin';
   const isDoctor      = role === 'BacSi';
   const isNurse       = role === 'YTa';

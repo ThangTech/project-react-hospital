@@ -3,7 +3,8 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Flex, Form, Input} from 'antd';
 import { useNavigate, Link } from 'react-router-dom';
 import backgroundImg from '../../assets/background.jpg';
-import { loginAccount } from '../../services/api.auth.service';
+import { getAccount, loginAccount } from '../../services/api.auth.service';
+import { useAuth } from '../../hooks/useAuth';
 
 type LoginFormValues = {
   TenDangNhap: string;
@@ -13,6 +14,7 @@ type LoginFormValues = {
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const {login} = useAuth();
   const [loading, setLoading] = useState(false);
 
   const onFinish = async (values: LoginFormValues) => {
@@ -22,11 +24,17 @@ const LoginPage = () => {
         TenDangNhap: values.TenDangNhap,
         MatKhau: values.MatKhau,
       });
+  
       const token = res.data?.token;
       if (token) {
+
         localStorage.setItem('token', token);
-       //  navigate('/dashboard');
+
+        const meRes = await getAccount();
+        const userData = meRes.data;
+        login(token, userData);
         navigate('/');
+
       }
     } catch {
 

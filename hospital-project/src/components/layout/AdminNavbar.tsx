@@ -12,7 +12,7 @@ import logo from '../../assets/logo.jpg';
 const AdminNavbar = () => {
   const { user, role } = useAuth();
   const userRole = role ?? 'Admin';
-  const userName = user?.fullName ?? 'Quản trị viên';
+  const userName = user?.tenDangNhap ?? 'Quản trị viên';
 
   // Lọc menu: chỉ hiện menu mà role hiện tại có quyền
   const visibleMenus = menuConfig.filter((m) => m.roles.includes(userRole));
