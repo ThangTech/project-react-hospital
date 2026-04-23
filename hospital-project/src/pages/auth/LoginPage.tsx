@@ -33,7 +33,20 @@ const LoginPage = () => {
         const meRes = await getAccount();
         const userData = meRes.data;
         login(token, userData);
-        navigate('/');
+
+        // Điều hướng theo role
+        const role = userData.vaiTro;
+        if (role === 'Admin') {
+          navigate('/dashboard/admin');
+        } else if (role === 'BacSi') {
+          navigate('/dashboard/doctor');
+        } else if (role === 'YTa') {
+          navigate('/dashboard/nurse');
+        } else if (role === 'KeToan') {
+          navigate('/dashboard/accountant');
+        } else {
+          navigate('/');
+        }
 
       }
     } catch {

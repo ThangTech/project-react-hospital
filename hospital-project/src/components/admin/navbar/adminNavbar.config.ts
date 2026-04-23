@@ -20,25 +20,25 @@ export const menuConfig: NavItem[] = [
     label: 'Quản lý ca khám',
     roles: ['Admin', 'BacSi', 'YTa'],
     children: [
-      { label: 'Hồ sơ bệnh án', path: '/medical-records' },
-      { label: 'Ca phẫu thuật',  path: '/surgeries' },
+      { label: 'Hồ sơ bệnh án', path: '/dashboard/medical-records' },
+      { label: 'Ca phẫu thuật',  path: '/dashboard/surgeries' },
     ],
   },
   {
     label: 'Quản lý bệnh nhân',
     roles: ['Admin', 'YTa', 'BacSi', 'KeToan'],
     children: [
-      { label: 'Danh sách bệnh nhân', path: '/patients' },
-      { label: 'Nhập viện',           path: '/admissions' },
-      { label: 'Xuất viện',           path: '/admissions?tab=discharge' },
-      { label: 'Quản lý giường',      path: '/beds' },
+      { label: 'Danh sách bệnh nhân', path: '/dashboard/patients' },
+      { label: 'Nhập viện',           path: '/dashboard/admissions' },
+      { label: 'Xuất viện',           path: '/dashboard/admissions?tab=discharge' },
+      { label: 'Quản lý giường',      path: '/dashboard/beds' },
     ],
   },
   {
     label: 'Quản lý báo cáo',
     roles: ['Admin', 'KeToan'],
     children: [
-      { label: 'Báo cáo tổng hợp',  path: '/reports' },
+      { label: 'Báo cáo tổng hợp',  path: '/dashboard/reports' },
       { label: 'Thống kê Dashboard', path: '/dashboard/admin' },
     ],
   },
@@ -46,7 +46,7 @@ export const menuConfig: NavItem[] = [
     label: 'Mẫu phiếu',
     roles: ['Admin', 'KeToan'],
     children: [
-      { label: 'Hóa đơn', path: '/invoices' },
+      { label: 'Hóa đơn', path: '/dashboard/invoices' },
     ],
   },
 ];
