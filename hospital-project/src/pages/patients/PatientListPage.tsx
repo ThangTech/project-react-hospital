@@ -1,6 +1,6 @@
 import { EditOutlined, DeleteOutlined, SearchOutlined, PlusOutlined, ReloadOutlined, UploadOutlined, DownloadOutlined } from "@ant-design/icons";
-import { Popconfirm, Input, DatePicker, Button } from "antd";
-import { getAllPatients } from "../../services/api.patient.service";
+import { Popconfirm, Input, DatePicker, Button, notification } from "antd";
+import { deletePatient, getAllPatients } from "../../services/api.patient.service";
 import { useState, useEffect } from "react";
 import type { BenhNhan } from "../../types";
 import { Table } from "antd";
@@ -100,10 +100,10 @@ const PatientListPage = () => {
                                           title="Bạn muốn xóa người dùng"
                                           description="Chắc chắn muốn xóa"
                                           onConfirm={() => {
-                                                 // handleDelete(record._id);
+                                                 handleDelete(record.id);
                                           }}
-                                          okText="Yes"
-                                          cancelText="No"
+                                          okText="Đồng ý"
+                                          cancelText="Hủy"
                                           placement="left"
                                    >
                                           <DeleteOutlined style={{ cursor: "pointer", color: "red" }} />
@@ -122,6 +122,22 @@ const PatientListPage = () => {
        };
        const addPatient = () => {
               setIsModalOpen(true);
+       }
+       const handleDelete = async(id: string) => {
+              const res = await deletePatient(id);
+              if(res){
+                     notification.success({
+                            message: "Xóa bệnh nhân",
+                            description: "Xóa thành công"
+                     })
+                     await getAll();
+              }
+              else{
+                     notification.error({
+                            message: "Xóa bệnh nhân",
+                            description: "Xóa thất bại"
+                     })
+              }
        }
        return (
               <>

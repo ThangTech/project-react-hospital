@@ -46,7 +46,7 @@ const NavUserMenu = ({ userName, userRole }: Props) => {
     {
       key: 'logout',
       icon: <LogOut size={14} />,
-      label: <span className="text-red-600">Đăng xuất</span>,
+      label: <span className="text-white-600">Đăng xuất</span>,
       danger: true,
       onClick: handleLogout,
     },

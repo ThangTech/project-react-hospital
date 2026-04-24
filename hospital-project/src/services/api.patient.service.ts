@@ -40,5 +40,9 @@ const updatePatient = async (id: string, formData: FormData): Promise<BenhNhan |
               return null;
        }
 };
-
-export { getAllPatients, createPatient, updatePatient }
+const deletePatient = async(id: string) => {
+       const url = `/gateway/api/benhnhan/delete/${id}`;
+       const res = axios.delete(url);
+       return res;
+}
+export { getAllPatients, createPatient, updatePatient, deletePatient }
