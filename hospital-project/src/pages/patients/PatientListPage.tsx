@@ -5,12 +5,14 @@ import { useState, useEffect } from "react";
 import type { BenhNhan } from "../../types";
 import { Table } from "antd";
 import dayjs from "dayjs";
+import AddPatientModal from "../../components/patients/AddPatientModal";
 const PatientListPage = () => {
        const [phone, setPhone] = useState('');
        const [name, setName] = useState('');
        const [id, setId] = useState('');
        const [date, setDate] = useState<string>('');
        const [dataPatients, setDataPatients] = useState<BenhNhan[]>([]);
+       const [isModalOpen, setIsModalOpen] = useState(false);
        const getAll = async () => {
               const res = await getAllPatients();
               setDataPatients(res);
@@ -114,6 +116,9 @@ const PatientListPage = () => {
               setId("");
               setPhone("");
 
+       };
+       const addPatient = () => {
+              setIsModalOpen(true);
        }
        return (
               <>
@@ -148,7 +153,7 @@ const PatientListPage = () => {
                                    />
                             </div>
                             <div style={{ display: 'flex', justifyContent: "flex-end", gap: 8, width: '100%' }}>
-                                   <Button icon={<PlusOutlined />} type="primary">Tạo mới</Button>
+                                   <Button icon={<PlusOutlined />} type="primary" onClick={addPatient}>Tạo mới</Button>
                                    <Button icon={<ReloadOutlined/>} type="primary" onClick={resetInput}>Đặt lại</Button>
                                    <Button icon={<UploadOutlined />}>Nhập Excel</Button>
                                    <Button icon={<DownloadOutlined />}>Xuất Excel</Button>
@@ -160,7 +165,12 @@ const PatientListPage = () => {
                             style={{ padding: 20 }}
                             pagination={{ pageSize: 10, showSizeChanger: true, showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} bệnh nhân` }}
                      />
+                     <AddPatientModal
+                            isModalOpen={isModalOpen}
+                            setIsModalOpen={setIsModalOpen}
+                     />
               </>
        )
+       
 }
 export default PatientListPage;

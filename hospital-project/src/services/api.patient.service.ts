@@ -10,4 +10,16 @@ const getAllPatients = async (): Promise<BenhNhan[]> => {
               return [];
        }
 }
-export { getAllPatients }
+
+const createPatient = async (data: Omit<BenhNhan, "id">): Promise<BenhNhan | null> => {
+       try {
+              const url = "/gateway/api/benhnhan/create";
+              const res = await axios.post<BenhNhan>(url, data);
+              return res.data;
+       } catch (error) {
+              console.log(error);
+              return null;
+       }
+};
+
+export { getAllPatients, createPatient }
