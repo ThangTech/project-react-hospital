@@ -11,10 +11,14 @@ const getAllPatients = async (): Promise<BenhNhan[]> => {
        }
 }
 
-const createPatient = async (data: Omit<BenhNhan, "id">): Promise<BenhNhan | null> => {
+const createPatient = async (formData: FormData): Promise<BenhNhan | null> => {
        try {
               const url = "/gateway/api/benhnhan/create";
-              const res = await axios.post<BenhNhan>(url, data);
+              const res = await axios.post<BenhNhan>(url, formData, {
+                     headers: {
+                            "Content-Type": "multipart/form-data",
+                     },
+              });
               return res.data;
        } catch (error) {
               console.log(error);

@@ -168,6 +168,7 @@ const PatientListPage = () => {
                      <AddPatientModal
                             isModalOpen={isModalOpen}
                             setIsModalOpen={setIsModalOpen}
+                            onSuccess={getAll}
                      />
               </>
        )
