@@ -6,6 +6,7 @@ import type { BenhNhan } from "../../types";
 import { Table } from "antd";
 import dayjs from "dayjs";
 import AddPatientModal from "../../components/patients/AddPatientModal";
+import UpdatePatientModal from "../../components/patients/UpdatePatientModal";
 const PatientListPage = () => {
        const [phone, setPhone] = useState('');
        const [name, setName] = useState('');
@@ -13,6 +14,8 @@ const PatientListPage = () => {
        const [date, setDate] = useState<string>('');
        const [dataPatients, setDataPatients] = useState<BenhNhan[]>([]);
        const [isModalOpen, setIsModalOpen] = useState(false);
+       const [dataUpdate, setDataUpdate] = useState<BenhNhan | null>(null);
+       const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
        const getAll = async () => {
               const res = await getAllPatients();
               setDataPatients(res);
@@ -84,13 +87,13 @@ const PatientListPage = () => {
                      title: "Thao tác",
                      align: 'center' as const,
                      width: 150,
-                     render: (_: any) => (
+                     render: (record: any) => (
                             <div style={{ display: "flex", gap: "20px", justifyContent: "end" }}>
                                    <EditOutlined
                                           style={{ cursor: "pointer", color: "green" }}
                                           onClick={() => {
-                                                 // setDataUpdate(record);
-                                                 // setIsModalUpdate(true);
+                                                 setDataUpdate(record);
+                                                 setIsModalUpdateOpen(true);
                                           }}
                                    />
                                    <Popconfirm
@@ -169,6 +172,16 @@ const PatientListPage = () => {
                             isModalOpen={isModalOpen}
                             setIsModalOpen={setIsModalOpen}
                             onSuccess={getAll}
+                     />
+                     <UpdatePatientModal
+                            dataUpdate={dataUpdate}
+                            setDataUpdate={setDataUpdate}
+                            isModalUpdateOpen={isModalUpdateOpen}
+                            setIsModalUpdateOpen={setIsModalUpdateOpen}
+                            onSuccess={getAll}
+                            id={id}
+                            setId={setId}
+
                      />
               </>
        )

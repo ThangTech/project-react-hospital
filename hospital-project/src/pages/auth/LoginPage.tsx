@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Flex, Form, Input} from 'antd';
+import { Button, Checkbox, Flex, Form, Input, message} from 'antd';
 import { useNavigate, Link } from 'react-router-dom';
 import backgroundImg from '../../assets/background.jpg';
 import { getAccount, loginAccount } from '../../services/api.auth.service';
@@ -33,7 +33,6 @@ const LoginPage = () => {
         const meRes = await getAccount();
         const userData = meRes.data;
         login(token, userData);
-
         // Điều hướng theo role
         const role = userData.vaiTro;
         if (role === 'Admin') {
@@ -47,10 +46,11 @@ const LoginPage = () => {
         } else {
           navigate('/');
         }
+        message.success(`Đăng nhập thành công với vai trò ${role}.`)
 
       }
     } catch {
-
+       message.error("Đăng nhập thất bại")
     } finally {
       setLoading(false);
     }

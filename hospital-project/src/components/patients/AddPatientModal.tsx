@@ -1,4 +1,4 @@
-import { Modal, Form, Input, Select, DatePicker, InputNumber, Upload, notification, message } from "antd";
+import { Modal, Form, Input, Select, DatePicker, InputNumber, Upload, notification} from "antd";
 import { createPatient } from "../../services/api.patient.service";
 import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";

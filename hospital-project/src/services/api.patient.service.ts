@@ -25,5 +25,20 @@ const createPatient = async (formData: FormData): Promise<BenhNhan | null> => {
               return null;
        }
 };
+const updatePatient = async (id: string, formData: FormData): Promise<BenhNhan | null> => {
+       try {
+              formData.append("id", id);
+              const url = "/gateway/api/benhnhan/update";
+              const res = await axios.put<BenhNhan>(url, formData, {
+                     headers: {
+                            "Content-Type": "multipart/form-data",
+                     },
+              });
+              return res.data;
+       } catch (error) {
+              console.log(error);
+              return null;
+       }
+};
 
-export { getAllPatients, createPatient }
+export { getAllPatients, createPatient, updatePatient }
