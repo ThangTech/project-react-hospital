@@ -45,4 +45,27 @@ const deletePatient = async(id: string) => {
        const res = axios.delete(url);
        return res;
 }
-export { getAllPatients, createPatient, updatePatient, deletePatient }
+
+const searchPatients = async (params: {
+       pageIndex?: number;
+       pageSize?: number;
+       hoTen?: string;
+       diaChi?: string;
+       soTheBaoHiem?: string;
+       id?: string;
+       namSinh?: number;
+}): Promise<{ items: BenhNhan[]; totalRecords: number } | null> => {
+       try {
+              const url = "/gateway/api/benhnhan/search";
+              const res = await axios.post(url, params);
+              return {
+                     items: res.data.items,
+                     totalRecords: res.data.totalRecords
+              };
+       } catch (error) {
+              console.log(error);
+              return null;
+       }
+};
+
+export { getAllPatients, createPatient, updatePatient, deletePatient, searchPatients }

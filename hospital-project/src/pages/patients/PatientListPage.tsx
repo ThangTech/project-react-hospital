@@ -1,6 +1,6 @@
 import { EditOutlined, DeleteOutlined, SearchOutlined, PlusOutlined, ReloadOutlined, UploadOutlined, DownloadOutlined } from "@ant-design/icons";
 import { Popconfirm, Input, DatePicker, Button, notification } from "antd";
-import { deletePatient, getAllPatients } from "../../services/api.patient.service";
+import { deletePatient, getAllPatients, searchPatients } from "../../services/api.patient.service";
 import { useState, useEffect } from "react";
 import type { BenhNhan } from "../../types";
 import { Table } from "antd";
@@ -8,7 +8,7 @@ import dayjs from "dayjs";
 import AddPatientModal from "../../components/patients/AddPatientModal";
 import UpdatePatientModal from "../../components/patients/UpdatePatientModal";
 const PatientListPage = () => {
-       const [phone, setPhone] = useState('');
+       const [address, setAddress] = useState('');
        const [name, setName] = useState('');
        const [id, setId] = useState('');
        const [date, setDate] = useState<string>('');
@@ -16,13 +16,16 @@ const PatientListPage = () => {
        const [isModalOpen, setIsModalOpen] = useState(false);
        const [dataUpdate, setDataUpdate] = useState<BenhNhan | null>(null);
        const [isModalUpdateOpen, setIsModalUpdateOpen] = useState(false);
+       const [totalRecords, setTotalRecords] = useState(0);
+       const [pageIndex, setPageIndex] = useState(1);
+       const [pageSize, setPageSize] = useState(10);
        const getAll = async () => {
               const res = await getAllPatients();
               setDataPatients(res);
        }
        useEffect(() => {
               getAll();
-       }, []);
+       }, [id, name, address, date]);
        const columns = [
               {
                      title: 'STT',
@@ -117,26 +120,45 @@ const PatientListPage = () => {
               setName("");
               setDate("");
               setId("");
-              setPhone("");
-
+              setAddress("");
+              setPageIndex(1);
+              setPageSize(10);
+              setTotalRecords(0);
+              // getAll();
        };
        const addPatient = () => {
               setIsModalOpen(true);
        }
-       const handleDelete = async(id: string) => {
+       const handleDelete = async (id: string) => {
               const res = await deletePatient(id);
-              if(res){
+              if (res) {
                      notification.success({
                             message: "Xóa bệnh nhân",
                             description: "Xóa thành công"
                      })
                      await getAll();
               }
-              else{
+              else {
                      notification.error({
                             message: "Xóa bệnh nhân",
                             description: "Xóa thất bại"
                      })
+              }
+       }
+       const searchPatient = async () => {
+              const namSinh = date ? parseInt(dayjs(date).format("YYYY")) : undefined;
+              const res = await searchPatients({
+                     pageIndex,
+                     pageSize,
+                     hoTen: name || undefined,
+                     diaChi: address || undefined,
+                     soTheBaoHiem: undefined,
+                     id: id || undefined,
+                     namSinh,
+              });
+              if (res) {
+                     setDataPatients(res.items);
+                     setTotalRecords(res.totalRecords);
               }
        }
        return (
@@ -148,7 +170,7 @@ const PatientListPage = () => {
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                                    <span>Mã bệnh nhân</span>
-                                   <Input placeholder="Mã bệnh nhân" style={{ width: 200 }}value={id} onChange={(event) => setId(event.target.value)} />
+                                   <Input placeholder="Mã bệnh nhân" style={{ width: 200 }} value={id} onChange={(event) => setId(event.target.value)} />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
                                    <span>Năm sinh</span>
@@ -158,23 +180,13 @@ const PatientListPage = () => {
                                           }} />
                             </div>
                             <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                                   <span>Số điện thoại</span>
-                                   <Input
-                                          prefix={<SearchOutlined />}
-                                          placeholder="Nhập số điện thoại"
-                                          style={{ width: 200 }}
-                                          maxLength={11}
-                                          value={phone}
-                                          onChange={(e) => {
-                                                 const value = e.target.value.replace(/[^0-9]/g, '');
-                                                 setPhone(value);
-                                          }}
-                                   />
+                                   <span>Địa chỉ</span>
+                                   <Input placeholder="Địa chỉ" style={{ width: 200 }} value={address} onChange={(event) => setAddress(event.target.value)} />
                             </div>
                             <div style={{ display: 'flex', justifyContent: "flex-end", gap: 8, width: '100%' }}>
                                    <Button icon={<PlusOutlined />} type="primary" onClick={addPatient}>Tạo mới</Button>
-                                   <Button icon={<ReloadOutlined/>} type="primary" onClick={resetInput}>Đặt lại</Button>
-                                   <Button icon={<UploadOutlined />}>Nhập Excel</Button>
+                                   <Button icon={<ReloadOutlined />} type="primary" onClick={resetInput}>Đặt lại</Button>
+                                   <Button icon={<SearchOutlined />} color="cyan" onClick={searchPatient}>Tìm kiếm</Button>
                                    <Button icon={<DownloadOutlined />}>Xuất Excel</Button>
                             </div>
                      </div>
@@ -182,7 +194,32 @@ const PatientListPage = () => {
                             dataSource={dataPatients}
                             columns={columns}
                             style={{ padding: 20 }}
-                            pagination={{ pageSize: 10, showSizeChanger: true, showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} bệnh nhân` }}
+                            pagination={{
+                                   pageSize: pageSize,
+                                   showSizeChanger: true,
+                                   showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} bệnh nhân`,
+                                   total: totalRecords,
+                                   onChange: (page, size) => {
+                                          setPageIndex(page);
+                                          setPageSize(size);
+                                          if (name || id || date || address) {
+                                                 const namSinh = date ? parseInt(dayjs(date).format("YYYY")) : undefined;
+                                                 searchPatients({
+                                                        pageIndex: page,
+                                                        pageSize: size,
+                                                        hoTen: name || undefined,
+                                                        id: id || undefined,
+                                                        namSinh,
+                                                        diaChi: address || undefined,
+                                                 }).then(res => {
+                                                        if (res) {
+                                                               setDataPatients(res.items);
+                                                               setTotalRecords(res.totalRecords);
+                                                        }
+                                                 });
+                                          }
+                                   }
+                            }}
                      />
                      <AddPatientModal
                             isModalOpen={isModalOpen}
@@ -201,6 +238,6 @@ const PatientListPage = () => {
                      />
               </>
        )
-       
+
 }
 export default PatientListPage;
