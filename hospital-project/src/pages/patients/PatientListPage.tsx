@@ -1,6 +1,6 @@
 import { EditOutlined, DeleteOutlined, SearchOutlined, PlusOutlined, ReloadOutlined, UploadOutlined, DownloadOutlined } from "@ant-design/icons";
 import { Popconfirm, Input, DatePicker, Button, notification } from "antd";
-import { deletePatient, getAllPatients, searchPatients } from "../../services/api.patient.service";
+import { deletePatient, exportExcelPatient, getAllPatients, searchPatients } from "../../services/api.patient.service";
 import { useState, useEffect } from "react";
 import type { BenhNhan } from "../../types";
 import { Table } from "antd";
@@ -161,6 +161,22 @@ const PatientListPage = () => {
                      setTotalRecords(res.totalRecords);
               }
        }
+       const exportExcel = async () => {
+              try {
+                     await exportExcelPatient();
+                     notification.success({
+                                   message: "Xuất excel cho danh sách bệnh nhân",
+                                   description: "Xuất file thành công"
+                            })
+
+              } catch (error) {
+                     console.log(error);
+                     notification.error({
+                                   message: "Xuất excel cho danh sách bệnh nhân",
+                                   description: "Xuất file thất bại"
+                            })
+              }
+       }
        return (
               <>
                      <div style={{ display: 'flex', gap: 16, marginBottom: 16, padding: 20, background: '#f5f5f5', borderRadius: 8, alignItems: 'flex-end' }}>
@@ -187,7 +203,7 @@ const PatientListPage = () => {
                                    <Button icon={<PlusOutlined />} type="primary" onClick={addPatient}>Tạo mới</Button>
                                    <Button icon={<ReloadOutlined />} type="primary" onClick={resetInput}>Đặt lại</Button>
                                    <Button icon={<SearchOutlined />} color="cyan" onClick={searchPatient}>Tìm kiếm</Button>
-                                   <Button icon={<DownloadOutlined />}>Xuất Excel</Button>
+                                   <Button icon={<DownloadOutlined />} onClick={exportExcel}>Xuất Excel</Button>
                             </div>
                      </div>
                      <Table

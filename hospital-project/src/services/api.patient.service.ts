@@ -67,5 +67,18 @@ const searchPatients = async (params: {
               return null;
        }
 };
+const exportExcelPatient = async () => {
+       const url = "/gateway/api/benhnhan/export-excel";
+       const res = await axios.get(url, { responseType: "blob" });
 
-export { getAllPatients, createPatient, updatePatient, deletePatient, searchPatients }
+       // Tạo link ảo để trigger download
+       const blob = new Blob([res.data], {
+              type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+       });
+       const link = document.createElement("a");
+       link.href = URL.createObjectURL(blob);
+       link.download = `DanhSachBenhNhan_${new Date().toISOString().slice(0, 10)}.xlsx`;
+       link.click();
+       URL.revokeObjectURL(link.href);
+}
+export { getAllPatients, createPatient, updatePatient, deletePatient, searchPatients, exportExcelPatient }
