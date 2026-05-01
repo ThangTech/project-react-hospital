@@ -15,6 +15,7 @@ export type KhoaPhong = {
   tenKhoa: string;
   loaiKhoa: string;
   soGiuongTieuChuan: number;
+  soGiuongHienCo?: number;
 };
 
 // ─── BacSi ───────────────────────────────────────────────
