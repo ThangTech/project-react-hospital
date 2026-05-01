@@ -33,7 +33,7 @@ const PatientListPage = () => {
                      title: 'STT',
                      width: 80,
                      align: 'center' as const,
-                     render: (_: any, __: any, index: number) => index + 1,
+                     render: (_: any, __: any, index: number) => (pageIndex - 1) * pageSize + index + 1,
               },
               {
                      title: 'Mã BN',
@@ -227,6 +227,7 @@ const PatientListPage = () => {
                             columns={columns}
                             style={{ padding: 20 }}
                             pagination={{
+                                   current: pageIndex,
                                    pageSize: pageSize,
                                    showSizeChanger: true,
                                    showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} bệnh nhân`,

@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined, PhoneOutlined } from "@ant-design/icons";
+import { ArrowLeftOutlined} from "@ant-design/icons";
 import {
        Avatar,
        Button,
@@ -26,7 +26,14 @@ const PatientDetailPage = () => {
        const [age, setAge] = useState("--");
        const [insuranceRate, setInsuranceRate] = useState("--");
        const [insuranceExpiry, setInsuranceExpiry] = useState("--");
-       const [isInsuranceExpired, setIsInsuranceExpired] = useState<boolean | null>(null);
+  const [isInsuranceExpired, setIsInsuranceExpired] = useState<boolean | null>(null);
+
+  const resolveImageUrl = (url?: string | null) => {
+    if (!url) return undefined;
+    if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("blob:")) return url;
+    const baseUrl = import.meta.env.VITE_PATIENT_FILE_BASE_URL || import.meta.env.VITE_BACKEND_URL || "";
+    return `${baseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
+  };
 
        useEffect(() => {
               getById();
@@ -38,7 +45,8 @@ const PatientDetailPage = () => {
               try {
                      const res = await getPatientById(id);
                      if (res?.data) {
-                            setDataDetail(res.data);
+                            setDataDetail(res.data)
+                            console.log(dataDetail?.avatar);
                      }
               } catch (error) {
                      console.log(error);
@@ -120,11 +128,11 @@ const PatientDetailPage = () => {
                             <Col xs={24} lg={8}>
                                    <Card>
                                           <Space direction="vertical" size={16} style={{ width: "100%", alignItems: "center" }}>
-                                                 <Avatar
-                                                        src={dataDetail.avatar}
-                                                        size={120}
-                                                        style={{ backgroundColor: "#1677ff", fontSize: 34 }}
-                                                 >
+              <Avatar
+                src={resolveImageUrl(dataDetail.avatar)}
+                size={120}
+                style={{ backgroundColor: "#1677ff", fontSize: 34 }}
+              >
                                                         {dataDetail.hoTen?.charAt(0).toUpperCase()}
                                                  </Avatar>
                                                  <div style={{ textAlign: "center" }}>

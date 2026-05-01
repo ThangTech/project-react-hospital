@@ -15,11 +15,17 @@ interface Props {
        onSuccess?: () => void;
 }
 const UpdatePatientModal = ({dataUpdate, setDataUpdate, id, setId, isModalUpdateOpen, setIsModalUpdateOpen, onSuccess}: Props) => {
+       const resolveImageUrl = (url?: string | null) => {
+              if (!url) return null;
+              if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("blob:")) return url;
+              const baseUrl = import.meta.env.VITE_PATIENT_FILE_BASE_URL || import.meta.env.VITE_BACKEND_URL || "";
+              return `${baseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
+       };
        useEffect(() => {
               if(dataUpdate){
                      setId(dataUpdate.id)
 
-                     setImageUrl(dataUpdate.avatar || null);
+                     setImageUrl(resolveImageUrl(dataUpdate.avatar));
                      form.setFieldsValue({
                             id: dataUpdate.id,
                             hoTen: dataUpdate.hoTen,
@@ -33,8 +39,8 @@ const UpdatePatientModal = ({dataUpdate, setDataUpdate, id, setId, isModalUpdate
                             avatar: dataUpdate.avatar
                       }); 
               }
-              // console.log("avatar:", dataUpdate?.avatar);
-       }, [dataUpdate]);
+               // console.log("avatar:", dataUpdate?.avatar);
+        }, [dataUpdate]);
        const [form] = Form.useForm();
        const [file, setFile] = useState<File | null>(null);
        const [imageUrl, setImageUrl] = useState<string | null>(null);

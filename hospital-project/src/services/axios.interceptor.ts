@@ -25,9 +25,9 @@ instance.interceptors.response.use(
   function (response) {
     // Bất kỳ mã trạng thái nào nằm trong phạm vi 2xx đều kích hoạt hàm này
    // Xử lý dữ liệu phản hồi
-    console.log("Interceptor response:", response);
-    console.log("Interceptor response.data:", response?.data);
-    console.log("Interceptor response.data.data:", response?.data?.data);
+//     console.log("Interceptor response:", response);
+//     console.log("Interceptor response.data:", response?.data);
+//     console.log("Interceptor response.data.data:", response?.data?.data);
     if(response.data && response.data.data) return response.data;
     return response;
   },
