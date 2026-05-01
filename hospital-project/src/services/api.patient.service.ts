@@ -10,7 +10,11 @@ const getAllPatients = async (): Promise<BenhNhan[]> => {
               return [];
        }
 }
-
+const getPatientById = (id: string) => {
+       const url = `/gateway/api/benhnhan/get-by-id/${id}`;
+       const res = axios.get(url);
+       return res;
+}
 const createPatient = async (formData: FormData): Promise<BenhNhan | null> => {
        try {
               const url = "/gateway/api/benhnhan/create";
@@ -81,4 +85,4 @@ const exportExcelPatient = async () => {
        link.click();
        URL.revokeObjectURL(link.href);
 }
-export { getAllPatients, createPatient, updatePatient, deletePatient, searchPatients, exportExcelPatient }
+export { getAllPatients, createPatient, updatePatient, deletePatient, searchPatients, exportExcelPatient, getPatientById }

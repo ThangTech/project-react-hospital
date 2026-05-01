@@ -1,5 +1,5 @@
-import { EditOutlined, DeleteOutlined, SearchOutlined, PlusOutlined, ReloadOutlined, UploadOutlined, DownloadOutlined } from "@ant-design/icons";
-import { Popconfirm, Input, DatePicker, Button, notification } from "antd";
+import { EditOutlined, DeleteOutlined, SearchOutlined, PlusOutlined, ReloadOutlined, DownloadOutlined } from "@ant-design/icons";
+import { Popconfirm, Input, DatePicker, Button, notification, Tooltip } from "antd";
 import { deletePatient, exportExcelPatient, getAllPatients, searchPatients } from "../../services/api.patient.service";
 import { useState, useEffect } from "react";
 import type { BenhNhan } from "../../types";
@@ -7,7 +7,9 @@ import { Table } from "antd";
 import dayjs from "dayjs";
 import AddPatientModal from "../../components/patients/AddPatientModal";
 import UpdatePatientModal from "../../components/patients/UpdatePatientModal";
+import { useNavigate } from "react-router-dom";
 const PatientListPage = () => {
+       const navigate = useNavigate();
        const [address, setAddress] = useState('');
        const [name, setName] = useState('');
        const [id, setId] = useState('');
@@ -38,6 +40,20 @@ const PatientListPage = () => {
                      dataIndex: 'id',
                      width: 300,
                      align: 'center' as const,
+                     render: (record: any) => {
+                            return (
+                                   <>
+                                          <Tooltip title="Ấn vào để xem chi tiết bệnh nhân" placement="top">
+                                                 <a href="#" style={{ color: "black", textDecoration: "underline" }}
+                                                        onClick={() => {
+                                                               navigate(`/dashboard/patients/${record}`);
+                                                        }}>
+                                                        {record}
+                                                 </a>
+                                          </Tooltip>
+                                   </>
+                            )
+                     }
               },
               {
                      title: 'Họ tên',
@@ -165,16 +181,16 @@ const PatientListPage = () => {
               try {
                      await exportExcelPatient();
                      notification.success({
-                                   message: "Xuất excel cho danh sách bệnh nhân",
-                                   description: "Xuất file thành công"
-                            })
+                            message: "Xuất excel cho danh sách bệnh nhân",
+                            description: "Xuất file thành công"
+                     })
 
               } catch (error) {
                      console.log(error);
                      notification.error({
-                                   message: "Xuất excel cho danh sách bệnh nhân",
-                                   description: "Xuất file thất bại"
-                            })
+                            message: "Xuất excel cho danh sách bệnh nhân",
+                            description: "Xuất file thất bại"
+                     })
               }
        }
        return (
