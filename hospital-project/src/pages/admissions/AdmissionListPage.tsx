@@ -12,7 +12,6 @@ import {
   DatePicker,
   Form,
   Input,
-  Modal,
   Popconfirm,
   Row,
   Select,
@@ -24,7 +23,7 @@ import {
 } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import type { GiuongBenh, KhoaPhong, NhapVien, BenhNhan } from "../../types";
+import type { BenhNhan, GiuongBenh, KhoaPhong, NhapVien } from "../../types";
 import {
   createAdmission,
   deleteAdmission,
@@ -35,51 +34,44 @@ import {
 } from "../../services/api.admission.service";
 import { getAllBeds, getAllDepartments } from "../../services/api.bed-department.service";
 import { getAllPatients } from "../../services/api.patient.service";
+import {
+  TRANG_THAI_OPTIONS,
+  trangThaiColor,
+} from "../../components/admissions/EditAdmissionModal";
+import CreateAdmissionModal from "../../components/admissions/CreateAdmissionModal";
+import EditAdmissionModal from "../../components/admissions/EditAdmissionModal";
+import TransferBedModal from "../../components/admissions/TransferBedModal";
 
-// ─── Trạng thái nhập viện ─────────────────────────────────
-const TRANG_THAI_OPTIONS = [
-  { label: "Đang điều trị", value: "Đang điều trị" },
-  { label: "Đã xuất viện", value: "Đã xuất viện" },
-  { label: "Chờ xuất viện", value: "Chờ xuất viện" },
-];
-
-const trangThaiColor = (tt: string) => {
-  switch (tt) {
-    case "Đang điều trị": return "processing";
-    case "Đã xuất viện":  return "success";
-    case "Chờ xuất viện": return "warning";
-    default:              return "default";
-  }
-};
-
-// ─── Component chính ──────────────────────────────────────
 const AdmissionListPage = () => {
-  const [admissions, setAdmissions]       = useState<NhapVien[]>([]);
-  const [patients, setPatients]           = useState<BenhNhan[]>([]);
-  const [beds, setBeds]                   = useState<GiuongBenh[]>([]);
-  const [departments, setDepartments]     = useState<KhoaPhong[]>([]);
-  const [loading, setLoading]             = useState(false);
 
-  // ─── Create / Edit modal ──────────────────────────────
+  const [admissions, setAdmissions] = useState<NhapVien[]>([]);
+  const [patients, setPatients] = useState<BenhNhan[]>([]);
+  const [beds, setBeds] = useState<GiuongBenh[]>([]);
+  const [departments, setDepartments] = useState<KhoaPhong[]>([]);
+  const [loading, setLoading] = useState(false);
+
+ 
   const [openCreateModal, setOpenCreateModal] = useState(false);
-  const [openEditModal, setOpenEditModal]     = useState(false);
-  const [editingRecord, setEditingRecord]     = useState<NhapVien | null>(null);
   const [createForm] = Form.useForm();
-  const [editForm]   = Form.useForm();
 
-  // ─── Chuyển giường modal ──────────────────────────────
+ 
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<NhapVien | null>(null);
+  const [editForm] = Form.useForm();
+
+ 
   const [openTransferModal, setOpenTransferModal] = useState(false);
-  const [transferRecord, setTransferRecord]       = useState<NhapVien | null>(null);
+  const [transferRecord, setTransferRecord] = useState<NhapVien | null>(null);
   const [transferForm] = Form.useForm();
 
-  // ─── Search filter ────────────────────────────────────
-  const [filterName, setFilterName]       = useState("");
-  const [filterKhoaId, setFilterKhoaId]   = useState<string | undefined>();
+ 
+  const [filterName, setFilterName] = useState("");
+  const [filterKhoaId, setFilterKhoaId] = useState<string | undefined>();
   const [filterTrangThai, setFilterTrangThai] = useState<string | undefined>();
-  const [filterTuNgay, setFilterTuNgay]   = useState<string | undefined>();
+  const [filterTuNgay, setFilterTuNgay] = useState<string | undefined>();
   const [filterDenNgay, setFilterDenNgay] = useState<string | undefined>();
 
-  // ─── Fetch data ───────────────────────────────────────
+
   const fetchAll = async () => {
     setLoading(true);
     const [admList, patList, bedList, deptList] = await Promise.all([
@@ -95,17 +87,19 @@ const AdmissionListPage = () => {
     setLoading(false);
   };
 
-  useEffect(() => { fetchAll(); }, []);
+  useEffect(() => {
+    fetchAll();
+  }, []);
 
-  // ─── Search ───────────────────────────────────────────
+ 
   const onSearch = async () => {
     setLoading(true);
     const result = await searchAdmissions({
       tenBenhNhan: filterName.trim() || undefined,
-      khoaId:      filterKhoaId,
-      trangThai:   filterTrangThai,
-      tuNgay:      filterTuNgay,
-      denNgay:     filterDenNgay,
+      khoaId: filterKhoaId,
+      trangThai: filterTrangThai,
+      tuNgay: filterTuNgay,
+      denNgay: filterDenNgay,
     });
     setAdmissions(result);
     setLoading(false);
@@ -120,7 +114,7 @@ const AdmissionListPage = () => {
     fetchAll();
   };
 
-  // ─── Create ───────────────────────────────────────────
+ 
   const onOpenCreate = () => {
     createForm.resetFields();
     setOpenCreateModal(true);
@@ -130,9 +124,9 @@ const AdmissionListPage = () => {
     try {
       await createAdmission({
         benhNhanId: values.benhNhanId,
-        giuongId:   values.giuongId,
-        khoaId:     values.khoaId,
-        lyDoNhap:   values.lyDoNhap,
+        giuongId: values.giuongId,
+        khoaId: values.khoaId,
+        lyDoNhap: values.lyDoNhap,
       });
       notification.success({ message: "Nhập viện thành công" });
       setOpenCreateModal(false);
@@ -140,12 +134,13 @@ const AdmissionListPage = () => {
     } catch (error: any) {
       notification.error({
         message: "Nhập viện thất bại",
-        description: error?.response?.data?.message || "Vui lòng kiểm tra lại dữ liệu",
+        description:
+          error?.response?.data?.message || "Vui lòng kiểm tra lại dữ liệu",
       });
     }
   };
 
-  // ─── Edit ─────────────────────────────────────────────
+
   const onOpenEdit = (record: NhapVien) => {
     setEditingRecord(record);
     editForm.setFieldsValue({
@@ -160,10 +155,12 @@ const AdmissionListPage = () => {
     if (!editingRecord) return;
     try {
       await updateAdmission({
-        id:        editingRecord.id,
-        lyDoNhap:  values.lyDoNhap,
+        id: editingRecord.id,
+        lyDoNhap: values.lyDoNhap,
         trangThai: values.trangThai,
-        ngayXuat:  values.ngayXuat ? dayjs(values.ngayXuat).toISOString() : null,
+        ngayXuat: values.ngayXuat
+          ? dayjs(values.ngayXuat).toISOString()
+          : null,
       });
       notification.success({ message: "Cập nhật nhập viện thành công" });
       setOpenEditModal(false);
@@ -171,12 +168,13 @@ const AdmissionListPage = () => {
     } catch (error: any) {
       notification.error({
         message: "Cập nhật thất bại",
-        description: error?.response?.data?.message || "Vui lòng kiểm tra lại",
+        description:
+          error?.response?.data?.message || "Vui lòng kiểm tra lại",
       });
     }
   };
 
-  // ─── Delete ───────────────────────────────────────────
+
   const onDelete = async (id: string) => {
     try {
       await deleteAdmission(id);
@@ -185,12 +183,13 @@ const AdmissionListPage = () => {
     } catch (error: any) {
       notification.error({
         message: "Xóa thất bại",
-        description: error?.response?.data?.message || "Không thể xóa phiếu nhập viện",
+        description:
+          error?.response?.data?.message || "Không thể xóa phiếu nhập viện",
       });
     }
   };
 
-  // ─── Chuyển giường ────────────────────────────────────
+ 
   const onOpenTransfer = (record: NhapVien) => {
     setTransferRecord(record);
     transferForm.resetFields();
@@ -201,8 +200,8 @@ const AdmissionListPage = () => {
     if (!transferRecord) return;
     try {
       await transferBed({
-        nhapVienId:       transferRecord.id,
-        giuongMoiId:      values.giuongMoiId,
+        nhapVienId: transferRecord.id,
+        giuongMoiId: values.giuongMoiId,
         lyDoChuyenGiuong: values.lyDoChuyenGiuong,
       });
       notification.success({ message: "Chuyển giường thành công" });
@@ -211,15 +210,16 @@ const AdmissionListPage = () => {
     } catch (error: any) {
       notification.error({
         message: "Chuyển giường thất bại",
-        description: error?.response?.data?.message || "Vui lòng kiểm tra lại",
+        description:
+          error?.response?.data?.message || "Vui lòng kiểm tra lại",
       });
     }
   };
 
-  // ─── Danh sách giường trống (cho chọn khi tạo / chuyển) ──
+
   const availableBeds = beds.filter((b) => b.trangThai === "Trống");
 
-  // ─── Columns ──────────────────────────────────────────
+  
   const columns = [
     {
       title: "Bệnh nhân",
@@ -246,19 +246,21 @@ const AdmissionListPage = () => {
       title: "Ngày nhập",
       dataIndex: "ngayNhap",
       key: "ngayNhap",
-      render: (v: string) => v ? dayjs(v).format("DD/MM/YYYY") : "--",
+      render: (v: string) => (v ? dayjs(v).format("DD/MM/YYYY") : "--"),
     },
     {
       title: "Ngày xuất",
       dataIndex: "ngayXuat",
       key: "ngayXuat",
-      render: (v: string | null) => v ? dayjs(v).format("DD/MM/YYYY") : "--",
+      render: (v: string | null) => (v ? dayjs(v).format("DD/MM/YYYY") : "--"),
     },
     {
       title: "Trạng thái",
       dataIndex: "trangThai",
       key: "trangThai",
-      render: (v: string) => <Tag color={trangThaiColor(v)}>{v}</Tag>,
+      render: (v: string) => (
+        <Tag color={trangThaiColor(v)}>{v}</Tag>
+      ),
     },
     {
       title: "Thao tác",
@@ -284,31 +286,47 @@ const AdmissionListPage = () => {
             cancelText="Hủy"
             onConfirm={() => onDelete(record.id)}
           >
-            <Button danger icon={<DeleteOutlined />} size="small" />
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+              size="small"
+            />
           </Popconfirm>
         </Space>
       ),
     },
   ];
 
+
   return (
-    <Space direction="vertical" size={16} style={{ width: "100%", padding: 20 }}>
-      {/* ── Header ── */}
+    <Space
+      direction="vertical"
+      size={16}
+      style={{ width: "100%", padding: 20 }}
+    >
+
       <Space style={{ width: "100%", justifyContent: "space-between" }}>
         <Typography.Title level={4} style={{ margin: 0 }}>
           Quản lý Nhập viện
         </Typography.Title>
         <Space>
-          <Button icon={<PlusOutlined />} type="primary" onClick={onOpenCreate}>
+          <Button
+            icon={<PlusOutlined />}
+            type="primary"
+            onClick={onOpenCreate}
+          >
             Nhập viện mới
           </Button>
-          <Button icon={<ReloadOutlined />} onClick={fetchAll}>
+          <Button
+            icon={<ReloadOutlined />}
+            onClick={fetchAll}
+          >
             Tải lại
           </Button>
         </Space>
       </Space>
 
-      {/* ── Bộ lọc tìm kiếm ── */}
+  
       <Row gutter={[12, 12]} align="middle">
         <Col xs={24} sm={12} md={6}>
           <Input
@@ -325,7 +343,10 @@ const AdmissionListPage = () => {
             value={filterKhoaId}
             onChange={setFilterKhoaId}
             allowClear
-            options={departments.map((d) => ({ label: d.tenKhoa, value: d.id }))}
+            options={departments.map((d) => ({
+              label: d.tenKhoa,
+              value: d.id,
+            }))}
           />
         </Col>
         <Col xs={24} sm={12} md={4}>
@@ -343,7 +364,7 @@ const AdmissionListPage = () => {
             placeholder="Từ ngày"
             style={{ width: "100%" }}
             format="DD/MM/YYYY"
-            onChange={(_, s) => setFilterTuNgay(s as string || undefined)}
+            onChange={(_, s) => setFilterTuNgay((s as string) || undefined)}
           />
         </Col>
         <Col xs={12} sm={6} md={3}>
@@ -351,177 +372,68 @@ const AdmissionListPage = () => {
             placeholder="Đến ngày"
             style={{ width: "100%" }}
             format="DD/MM/YYYY"
-            onChange={(_, s) => setFilterDenNgay(s as string || undefined)}
+            onChange={(_, s) => setFilterDenNgay((s as string) || undefined)}
           />
         </Col>
         <Col xs={24} sm={12} md={3}>
           <Space>
-            <Button icon={<SearchOutlined />} type="primary" onClick={onSearch}>
+            <Button
+              icon={<SearchOutlined />}
+              type="primary"
+              onClick={onSearch}
+            >
               Tìm
             </Button>
-            <Button icon={<ReloadOutlined />} onClick={onResetFilter}>
+            <Button
+              icon={<ReloadOutlined />}
+              onClick={onResetFilter}
+            >
               Đặt lại
             </Button>
           </Space>
         </Col>
       </Row>
 
-      {/* ── Bảng dữ liệu ── */}
+   
       <Table
         rowKey="id"
         loading={loading}
         dataSource={admissions}
         columns={columns}
         scroll={{ x: 900 }}
-        pagination={{ pageSize: 10, showTotal: (t) => `Tổng ${t} phiếu` }}
+        pagination={{
+          pageSize: 10,
+          showTotal: (t) => `Tổng ${t} phiếu`,
+        }}
       />
 
-      {/* ══ Modal: Nhập viện mới ══ */}
-      <Modal
-        title="Nhập viện mới"
+   
+      <CreateAdmissionModal
         open={openCreateModal}
+        form={createForm}
+        patients={patients}
+        departments={departments}
+        availableBeds={availableBeds}
         onCancel={() => setOpenCreateModal(false)}
-        onOk={() => createForm.submit()}
-        okText="Xác nhận nhập viện"
-        cancelText="Hủy"
-        width={560}
-        destroyOnClose
-      >
-        <Form form={createForm} layout="vertical" onFinish={onSaveCreate}>
-          <Form.Item
-            name="benhNhanId"
-            label="Bệnh nhân"
-            rules={[{ required: true, message: "Vui lòng chọn bệnh nhân" }]}
-          >
-            <Select
-              showSearch
-              placeholder="Chọn bệnh nhân"
-              optionFilterProp="label"
-              options={patients.map((p) => ({
-                label: `${p.hoTen} — ${p.soDienThoai ?? ""}`,
-                value: p.id,
-              }))}
-            />
-          </Form.Item>
+        onFinish={onSaveCreate}
+      />
 
-          <Form.Item
-            name="khoaId"
-            label="Khoa"
-            rules={[{ required: true, message: "Vui lòng chọn khoa" }]}
-          >
-            <Select
-              showSearch
-              placeholder="Chọn khoa"
-              optionFilterProp="label"
-              options={departments.map((d) => ({ label: d.tenKhoa, value: d.id }))}
-            />
-          </Form.Item>
 
-          <Form.Item
-            name="giuongId"
-            label="Giường"
-            rules={[{ required: true, message: "Vui lòng chọn giường" }]}
-          >
-            <Select
-              showSearch
-              placeholder="Chọn giường trống"
-              optionFilterProp="label"
-              options={availableBeds.map((b) => ({
-                label: `${b.tenGiuong} — ${b.loaiGiuong}`,
-                value: b.id,
-              }))}
-              notFoundContent="Không có giường trống"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="lyDoNhap"
-            label="Lý do nhập viện"
-            rules={[{ required: true, message: "Vui lòng nhập lý do" }]}
-          >
-            <Input.TextArea rows={3} placeholder="Mô tả lý do nhập viện..." />
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      {/* ══ Modal: Cập nhật nhập viện ══ */}
-      <Modal
-        title="Cập nhật phiếu nhập viện"
+      <EditAdmissionModal
         open={openEditModal}
+        form={editForm}
         onCancel={() => setOpenEditModal(false)}
-        onOk={() => editForm.submit()}
-        okText="Lưu thay đổi"
-        cancelText="Hủy"
-        width={480}
-        destroyOnClose
-      >
-        <Form form={editForm} layout="vertical" onFinish={onSaveEdit}>
-          <Form.Item
-            name="lyDoNhap"
-            label="Lý do nhập viện"
-            rules={[{ required: true, message: "Vui lòng nhập lý do" }]}
-          >
-            <Input.TextArea rows={3} />
-          </Form.Item>
+        onFinish={onSaveEdit}
+      />
 
-          <Form.Item
-            name="trangThai"
-            label="Trạng thái"
-            rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}
-          >
-            <Select options={TRANG_THAI_OPTIONS} />
-          </Form.Item>
-
-          <Form.Item name="ngayXuat" label="Ngày xuất viện (nếu có)">
-            <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      {/* ══ Modal: Chuyển giường ══ */}
-      <Modal
-        title={`Chuyển giường — ${transferRecord?.tenBenhNhan ?? ""}`}
+      <TransferBedModal
         open={openTransferModal}
+        form={transferForm}
+        record={transferRecord}
+        availableBeds={availableBeds}
         onCancel={() => setOpenTransferModal(false)}
-        onOk={() => transferForm.submit()}
-        okText="Xác nhận chuyển"
-        cancelText="Hủy"
-        width={480}
-        destroyOnClose
-      >
-        <Form form={transferForm} layout="vertical" onFinish={onSaveTransfer}>
-          <Form.Item label="Giường hiện tại">
-            <Input value={transferRecord?.tenGiuong ?? "--"} disabled />
-          </Form.Item>
-
-          <Form.Item
-            name="giuongMoiId"
-            label="Giường mới"
-            rules={[{ required: true, message: "Vui lòng chọn giường mới" }]}
-          >
-            <Select
-              showSearch
-              placeholder="Chọn giường trống"
-              optionFilterProp="label"
-              options={availableBeds
-                .filter((b) => b.id !== transferRecord?.giuongId)
-                .map((b) => ({
-                  label: `${b.tenGiuong} — ${b.loaiGiuong}`,
-                  value: b.id,
-                }))}
-              notFoundContent="Không có giường trống khác"
-            />
-          </Form.Item>
-
-          <Form.Item
-            name="lyDoChuyenGiuong"
-            label="Lý do chuyển giường"
-            rules={[{ required: true, message: "Vui lòng nhập lý do" }]}
-          >
-            <Input.TextArea rows={3} placeholder="Lý do chuyển giường..." />
-          </Form.Item>
-        </Form>
-      </Modal>
+        onFinish={onSaveTransfer}
+      />
     </Space>
   );
 };
