@@ -177,7 +177,18 @@ const AdmissionListPage = () => {
 
   const onDelete = async (id: string) => {
     try {
-      await deleteAdmission(id);
+      // axios interceptor chuyển 400 thành resolved value
+      // nên phải kiểm tra message thủ công
+      const res: any = await deleteAdmission(id);
+
+      if (res?.message && res.message !== "Xóa thành công.") {
+        notification.error({
+          message: "Xóa thất bại",
+          description: res.message,
+        });
+        return;
+      }
+
       notification.success({ message: "Đã xóa phiếu nhập viện" });
       await fetchAll();
     } catch (error: any) {
@@ -364,7 +375,9 @@ const AdmissionListPage = () => {
             placeholder="Từ ngày"
             style={{ width: "100%" }}
             format="DD/MM/YYYY"
-            onChange={(_, s) => setFilterTuNgay((s as string) || undefined)}
+            onChange={(date) =>
+              setFilterTuNgay(date ? date.toISOString() : undefined)
+            }
           />
         </Col>
         <Col xs={12} sm={6} md={3}>
@@ -372,7 +385,9 @@ const AdmissionListPage = () => {
             placeholder="Đến ngày"
             style={{ width: "100%" }}
             format="DD/MM/YYYY"
-            onChange={(_, s) => setFilterDenNgay((s as string) || undefined)}
+            onChange={(date) =>
+              setFilterDenNgay(date ? date.toISOString() : undefined)
+            }
           />
         </Col>
         <Col xs={24} sm={12} md={3}>
