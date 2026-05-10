@@ -1,4 +1,4 @@
-﻿import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
 import { Button, Form, Popconfirm, Space, Table, Tag, notification } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -53,7 +53,7 @@ const MedicalRecordListPage = () => {
 
   const onSearch = async () => {
     setLoading(true);
-    const result = await searchMedicalRecords({ tenBenhNhan: filterName.trim() || undefined, bacSiId: filterBacSiId });
+    const result = await searchMedicalRecords({ searchTerm: filterName.trim() || undefined });
     setRecords(result);
     setLoading(false);
   };
@@ -145,8 +145,9 @@ const MedicalRecordListPage = () => {
   };
 
   const columns = [
-    { title: "Bệnh nhân", key: "benhNhan", render: (record: HoSoBenhAn) => getTenBenhNhanFromAdm(record.nhapVienId) },
-    { title: "Bác sĩ phụ trách", key: "bacSi", render: (record: HoSoBenhAn) => getTenBacSi(record.bacSiPhuTrachId) },
+    // Ưu tiên field join sẵn từ backend (MedicalRecordDto), fallback lookup
+    { title: "Bệnh nhân", key: "benhNhan", render: (record: HoSoBenhAn) => record.tenBenhNhan || getTenBenhNhanFromAdm(record.nhapVienId ?? "") },
+    { title: "Bác sĩ phụ trách", key: "bacSi", render: (record: HoSoBenhAn) => record.tenBacSi || getTenBacSi(record.bacSiPhuTrachId ?? "") },
     {
       title: "Chẩn đoán ban đầu",
       dataIndex: "chanDoanBanDau",
@@ -182,10 +183,7 @@ const MedicalRecordListPage = () => {
 
       <MedicalRecordFilters
         filterName={filterName}
-        filterBacSiId={filterBacSiId}
-        doctors={doctors}
         onFilterNameChange={setFilterName}
-        onFilterBacSiChange={setFilterBacSiId}
         onSearch={onSearch}
         onReset={onResetFilter}
       />
