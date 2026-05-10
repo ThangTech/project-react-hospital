@@ -6,39 +6,52 @@ import type { HoSoBenhAn } from "../types";
 const getAllMedicalRecords = async (): Promise<HoSoBenhAn[]> => {
   try {
     const res = await axios.get("/gateway/api/medicalrecord/get-all-medical");
-    return res.data ?? [];
+    const data = res.data;
+    if (Array.isArray(data)) {
+      return data;
+    } else if (Array.isArray(data?.data)) {
+      return data.data;
+    } else if (Array.isArray(data?.Data)) {
+      return data.Data;
+    } else {
+      return [];
+    }
   } catch (error) {
-    console.log(error);
+    console.error("[getAllMedicalRecords]", error);
     return [];
   }
 };
 
-// POST /gateway/api/medicalrecord/search
-// Body: { searchTerm, pageNumber, pageSize }
-// Response: { success, data: { data: HoSoBenhAn[], ... }, message }
 const searchMedicalRecords = async (params: {
   searchTerm?: string;
   pageNumber?: number;
   pageSize?: number;
 }): Promise<HoSoBenhAn[]> => {
-  try {
-    const res = await axios.post("/gateway/api/medicalrecord/search", {
-      searchTerm: params.searchTerm,
-      pageNumber: params.pageNumber ?? 1,
-      pageSize: params.pageSize ?? 100,
-    });
-    // Response: ApiResponse<PagedResult<MedicalRecordDto>>
-    const pagedResult = res.data?.data;
-    return pagedResult?.data ?? pagedResult?.items ?? [];
-  } catch (error) {
-    console.log(error);
+  const res = await axios.post("/gateway/api/medicalrecord/search", {
+    searchTerm: params.searchTerm ?? null,
+    pageNumber: params.pageNumber ?? 1,
+    pageSize: params.pageSize ?? 100,
+  });
+  const wrapper = res.data;
+  const pagedResult = wrapper?.data ?? wrapper?.Data;
+  let items: unknown;
+  if (pagedResult?.data !== undefined && pagedResult?.data !== null) {
+    items = pagedResult.data;
+  } else if (pagedResult?.Data !== undefined && pagedResult?.Data !== null) {
+    items = pagedResult.Data;
+  } else if (pagedResult?.items !== undefined && pagedResult?.items !== null) {
+    items = pagedResult.items;
+  } else {
+    items = [];
+  }
+
+  if (Array.isArray(items)) {
+    return items;
+  } else {
     return [];
   }
 };
 
-// POST /gateway/api/medicalrecord
-// Body: MedicalRecordDto
-// Response: { success, data: MedicalRecordDto, message }
 const createMedicalRecord = async (data: {
   nhapVienId: string;
   bacSiPhuTrachId: string;
@@ -51,11 +64,6 @@ const createMedicalRecord = async (data: {
   return axios.post("/gateway/api/medicalrecord", data);
 };
 
-// PUT /gateway/api/medicalrecord/{id}
-// Body: MedicalRecordDto
-// Response: { success, data: MedicalRecordDto, message }
-// Quan trọng: dùng ?? null để tránh undefined bị JSON.stringify bỏ qua key
-// SP dùng ISNULL(@param, col) nên cần gửi giá trị thực để cập nhật
 const updateMedicalRecord = async (data: {
   id: string;
   bacSiPhuTrachId: string;
@@ -77,8 +85,6 @@ const updateMedicalRecord = async (data: {
   return axios.put(`/gateway/api/medicalrecord/${id}`, body);
 };
 
-// DELETE /gateway/api/medicalrecord/{id}
-// Response: { success, message }
 const deleteMedicalRecord = async (id: string) => {
   return axios.delete(`/gateway/api/medicalrecord/${id}`);
 };
