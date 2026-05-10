@@ -1,5 +1,5 @@
-﻿import { Button, Space, Typography } from "antd";
 import { PlusOutlined, ReloadOutlined } from "@ant-design/icons";
+import { Button, Space, Typography } from "antd";
 
 interface Props {
   onOpenCreate: () => void;
@@ -12,7 +12,6 @@ const MedicalRecordListHeader = ({ onOpenCreate, onReload }: Props) => {
       <Typography.Title level={4} style={{ margin: 0 }}>
         Quản lý Hồ Sơ Bệnh Án
       </Typography.Title>
-
       <Space>
         <Button icon={<PlusOutlined />} type="primary" onClick={onOpenCreate}>
           Tạo hồ sơ mới
