@@ -54,6 +54,8 @@ const createMedicalRecord = async (data: {
 // PUT /gateway/api/medicalrecord/{id}
 // Body: MedicalRecordDto
 // Response: { success, data: MedicalRecordDto, message }
+// Quan trọng: dùng ?? null để tránh undefined bị JSON.stringify bỏ qua key
+// SP dùng ISNULL(@param, col) nên cần gửi giá trị thực để cập nhật
 const updateMedicalRecord = async (data: {
   id: string;
   bacSiPhuTrachId: string;
@@ -63,7 +65,15 @@ const updateMedicalRecord = async (data: {
   chanDoanRaVien?: string;
   ketQuaDieuTri?: string;
 }) => {
-  const { id, ...body } = data;
+  const { id, ...rest } = data;
+  const body = {
+    bacSiPhuTrachId: rest.bacSiPhuTrachId ?? null,
+    tienSuBenh: rest.tienSuBenh?.trim() || null,
+    chanDoanBanDau: rest.chanDoanBanDau?.trim() || null,
+    phuongAnDieuTri: rest.phuongAnDieuTri?.trim() || null,
+    chanDoanRaVien: rest.chanDoanRaVien?.trim() || null,
+    ketQuaDieuTri: rest.ketQuaDieuTri?.trim() || null,
+  };
   return axios.put(`/gateway/api/medicalrecord/${id}`, body);
 };
 

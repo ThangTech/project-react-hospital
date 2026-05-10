@@ -170,10 +170,22 @@ const MedicalRecordListPage = () => {
       render: (v: string | null) => v || <span style={{ color: "#aaa" }}>Chưa có</span>,
     },
     {
+      title: "Chẩn đoán ra viện",
+      dataIndex: "chanDoanRaVien",
+      key: "chanDoanRaVien",
+      ellipsis: true,
+      render: (v: string | null) => v || <span style={{ color: "#aaa" }}>Chưa có</span>,
+    },
+    {
       title: "Kết quả điều trị",
       dataIndex: "ketQuaDieuTri",
       key: "ketQuaDieuTri",
-      render: (v: string | null) => (v ? <Tag color={ketQuaColor(v)}>{v}</Tag> : <span style={{ color: "#aaa" }}>Đang điều trị</span>),
+      render: (v: string | null) =>
+        v ? (
+          <Tag color={ketQuaColor(v)}>{v}</Tag>
+        ) : (
+          <Tag color="default">Chưa có</Tag>
+        ),
     },
     { title: "Ngày lập", dataIndex: "ngayLap", key: "ngayLap", render: (v: string | null) => (v ? dayjs(v).format("DD/MM/YYYY") : "--") },
     {
@@ -207,13 +219,20 @@ const MedicalRecordListPage = () => {
         loading={loading}
         dataSource={records}
         columns={columns}
-        scroll={{ x: 900 }}
+        scroll={{ x: 1800 }}
         pagination={{ pageSize: 10, showTotal: (t) => `Tổng ${t} hồ sơ` }}
       />
 
       <CreateMedicalRecordModal open={openCreate} form={createForm} admissions={admissions} doctors={doctors} onCancel={() => setOpenCreate(false)} onFinish={onSaveCreate} />
 
-      <EditMedicalRecordModal open={openEdit} form={editForm} doctors={doctors} onCancel={() => setOpenEdit(false)} onFinish={onSaveEdit} />
+      <EditMedicalRecordModal
+        open={openEdit}
+        form={editForm}
+        doctors={doctors}
+        trangThaiNhapVien={editingRecord?.trangThaiNhapVien}
+        onCancel={() => setOpenEdit(false)}
+        onFinish={onSaveEdit}
+      />
 
       <MedicalRecordDetailModal
         open={openDetail}
