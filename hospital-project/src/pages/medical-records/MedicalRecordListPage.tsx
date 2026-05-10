@@ -156,6 +156,20 @@ const MedicalRecordListPage = () => {
       render: (v: string | null) => v || <span style={{ color: "#aaa" }}>Chưa có</span>,
     },
     {
+      title: "Tiền sử bệnh",
+      dataIndex: "tienSuBenh",
+      key: "tienSuBenh",
+      ellipsis: true,
+      render: (v: string | null) => v || <span style={{ color: "#aaa" }}>Không có</span>,
+    },
+    {
+      title: "Phương án điều trị",
+      dataIndex: "phuongAnDieuTri",
+      key: "phuongAnDieuTri",
+      ellipsis: true,
+      render: (v: string | null) => v || <span style={{ color: "#aaa" }}>Chưa có</span>,
+    },
+    {
       title: "Kết quả điều trị",
       dataIndex: "ketQuaDieuTri",
       key: "ketQuaDieuTri",
