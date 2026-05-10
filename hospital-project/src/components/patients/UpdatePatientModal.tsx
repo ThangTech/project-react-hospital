@@ -8,13 +8,11 @@ import { updatePatient } from "../../services/api.patient.service";
 interface Props {
        dataUpdate: BenhNhan | null;
        setDataUpdate: (value: BenhNhan | null) => void;
-       id: string;
-       setId: (value: string) => void;
        isModalUpdateOpen: boolean;
        setIsModalUpdateOpen: (value: boolean) => void;
        onSuccess?: () => void;
 }
-const UpdatePatientModal = ({dataUpdate, setDataUpdate, id, setId, isModalUpdateOpen, setIsModalUpdateOpen, onSuccess}: Props) => {
+const UpdatePatientModal = ({dataUpdate, setDataUpdate, isModalUpdateOpen, setIsModalUpdateOpen, onSuccess}: Props) => {
        const resolveImageUrl = (url?: string | null) => {
               if (!url) return null;
               if (url.startsWith("http://") || url.startsWith("https://") || url.startsWith("blob:")) return url;
@@ -23,8 +21,6 @@ const UpdatePatientModal = ({dataUpdate, setDataUpdate, id, setId, isModalUpdate
        };
        useEffect(() => {
               if(dataUpdate){
-                     setId(dataUpdate.id)
-
                      setImageUrl(resolveImageUrl(dataUpdate.avatar));
                      form.setFieldsValue({
                             id: dataUpdate.id,
@@ -145,7 +141,7 @@ const UpdatePatientModal = ({dataUpdate, setDataUpdate, id, setId, isModalUpdate
                                           label="Mã bệnh nhân"
                                           name="id"
                                    >
-                                          <Input value={id} disabled/>
+                                          <Input disabled/>
                                    </Form.Item>
                                    <Form.Item
                                           label="Họ tên"

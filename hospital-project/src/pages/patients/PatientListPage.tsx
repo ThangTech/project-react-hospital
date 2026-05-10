@@ -21,13 +21,15 @@ const PatientListPage = () => {
        const [totalRecords, setTotalRecords] = useState(0);
        const [pageIndex, setPageIndex] = useState(1);
        const [pageSize, setPageSize] = useState(10);
+       const hasFilters = Boolean(name || id || date || address);
        const getAll = async () => {
               const res = await getAllPatients();
               setDataPatients(res);
+              setTotalRecords(res.length);
        }
        useEffect(() => {
               getAll();
-       }, [id, name, address, date]);
+       }, []);
        const columns = [
               {
                      title: 'STT',
@@ -146,8 +148,7 @@ const PatientListPage = () => {
               setAddress("");
               setPageIndex(1);
               setPageSize(10);
-              setTotalRecords(0);
-              // getAll();
+              getAll();
        };
        const addPatient = () => {
               setIsModalOpen(true);
@@ -238,11 +239,11 @@ const PatientListPage = () => {
                                    pageSize: pageSize,
                                    showSizeChanger: true,
                                    showTotal: (total, range) => `${range[0]}-${range[1]} của ${total} bệnh nhân`,
-                                   total: totalRecords,
+                                   total: hasFilters ? totalRecords : dataPatients.length,
                                    onChange: (page, size) => {
                                           setPageIndex(page);
                                           setPageSize(size);
-                                          if (name || id || date || address) {
+                                          if (hasFilters) {
                                                  const namSinh = date ? parseInt(dayjs(date).format("YYYY")) : undefined;
                                                  searchPatients({
                                                         pageIndex: page,
@@ -272,8 +273,6 @@ const PatientListPage = () => {
                             isModalUpdateOpen={isModalUpdateOpen}
                             setIsModalUpdateOpen={setIsModalUpdateOpen}
                             onSuccess={getAll}
-                            id={id}
-                            setId={setId}
 
                      />
               </>
