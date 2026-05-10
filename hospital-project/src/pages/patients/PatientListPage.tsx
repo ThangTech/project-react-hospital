@@ -1,4 +1,4 @@
-import { EditOutlined, DeleteOutlined, SearchOutlined, PlusOutlined, ReloadOutlined, DownloadOutlined } from "@ant-design/icons";
+﻿import { EditOutlined, DeleteOutlined, SearchOutlined, PlusOutlined, ReloadOutlined, DownloadOutlined } from "@ant-design/icons";
 import { Popconfirm, Input, DatePicker, Button, notification, Tooltip } from "antd";
 import { deletePatient, exportExcelPatient, getAllPatients, searchPatients } from "../../services/api.patient.service";
 import { useState, useEffect } from "react";
@@ -98,7 +98,14 @@ const PatientListPage = () => {
                      width: 200,
                      align: 'center' as const,
                      render: (value: any) => {
-                            const color = value === 'Đang điều trị' ? 'blue' : 'green';
+                            let color = "default";
+                            if (value === "Đang điều trị") {
+                                   color = "blue";
+                            } else if (value === "Chờ xuất viện") {
+                                   color = "orange";
+                            } else if (value === "Đã xuất viện") {
+                                   color = "green";
+                            }
                             return <span style={{ color }}>{value}</span>;
                      },
               },
