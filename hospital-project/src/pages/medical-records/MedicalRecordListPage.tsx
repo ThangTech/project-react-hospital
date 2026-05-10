@@ -53,9 +53,15 @@ const MedicalRecordListPage = () => {
 
   const onSearch = async () => {
     setLoading(true);
-    const result = await searchMedicalRecords({ searchTerm: filterName.trim() || undefined });
-    setRecords(result);
-    setLoading(false);
+    try {
+      const result = await searchMedicalRecords({ searchTerm: filterName.trim() || undefined });
+      setRecords(result);
+    } catch (error: any) {
+      const msg = error?.response?.data?.message ?? error?.response?.data?.Message ?? "Tìm kiếm thất bại";
+      notification.error({ message: "Lỗi tìm kiếm", description: msg });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const onResetFilter = () => {

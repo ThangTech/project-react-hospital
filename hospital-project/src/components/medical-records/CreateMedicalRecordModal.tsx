@@ -1,9 +1,9 @@
-import { Form, Input, Modal, Select } from "antd";
+import { Form, Input, Modal, Select, type FormInstance } from "antd";
 import type { BacSi, NhapVien } from "../../types";
 
 interface Props {
   open: boolean;
-  form: ReturnType<typeof Form.useForm>[0];
+  form: FormInstance;
   admissions: NhapVien[];
   doctors: BacSi[];
   onCancel: () => void;
@@ -40,9 +40,9 @@ const CreateMedicalRecordModal = ({
             placeholder="Chọn phiếu nhập viện (tên bệnh nhân)"
             optionFilterProp="label"
             options={admissions
-              .filter((a) => a.trangThai !== "Đã xuất viện")
+              .filter((a) => a.trangThai === "Đang điều trị" || a.trangThai === "Chờ xuất viện")
               .map((a) => ({
-                label: `${a.tenBenhNhan} – ${a.tenKhoa}`,
+                label: `${a.tenBenhNhan} – ${a.tenKhoa} [${a.trangThai}]`,
                 value: a.id,
               }))}
           />
