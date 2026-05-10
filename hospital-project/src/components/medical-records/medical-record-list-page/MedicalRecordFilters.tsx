@@ -1,38 +1,31 @@
-﻿import { Button, Col, Input, Row, Select, Space } from "antd";
 import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
-import type { BacSi } from "../../../types";
+import { Button, Col, Input, Row, Space } from "antd";
 
 interface Props {
   filterName: string;
-  filterBacSiId?: string;
-  doctors: BacSi[];
-  onFilterNameChange: (value: string) => void;
-  onFilterBacSiChange: (value: string | undefined) => void;
+  onFilterNameChange: (val: string) => void;
   onSearch: () => void;
   onReset: () => void;
 }
 
-const MedicalRecordFilters = ({ filterName, filterBacSiId, doctors, onFilterNameChange, onFilterBacSiChange, onSearch, onReset }: Props) => {
+const MedicalRecordFilters = ({
+  filterName,
+  onFilterNameChange,
+  onSearch,
+  onReset,
+}: Props) => {
   return (
     <Row gutter={[12, 12]} align="middle">
-      <Col xs={24} sm={12} md={8}>
-        <Input placeholder="Tên bệnh nhân" value={filterName} onChange={(e) => onFilterNameChange(e.target.value)} allowClear />
-      </Col>
-
-      <Col xs={24} sm={12} md={7}>
-        <Select
-          placeholder="Lọc theo bác sĩ"
-          style={{ width: "100%" }}
-          value={filterBacSiId}
-          onChange={onFilterBacSiChange}
+      <Col xs={24} sm={12} md={10}>
+        <Input
+          placeholder="Tìm theo tên bệnh nhân hoặc bác sĩ..."
+          value={filterName}
+          onChange={(e) => onFilterNameChange(e.target.value)}
+          onPressEnter={onSearch}
           allowClear
-          showSearch
-          optionFilterProp="label"
-          options={doctors.map((d) => ({ label: d.hoTen, value: d.id }))}
         />
       </Col>
-
-      <Col xs={24} sm={12} md={5}>
+      <Col xs={24} sm={12} md={6}>
         <Space>
           <Button icon={<SearchOutlined />} type="primary" onClick={onSearch}>
             Tìm
