@@ -22,7 +22,6 @@ const MedicalRecordDetailModal = ({
 }: Props) => {
   if (!record) return null;
 
-  // Ưu tiên dùng field join sẵn từ backend, fallback sang lookup
   const tenBenhNhan =
     record.tenBenhNhan ||
     (record.nhapVienId ? getTenBenhNhanFromAdm(record.nhapVienId) : "--");
