@@ -23,19 +23,15 @@ instance.interceptors.request.use(
 // Add a response interceptor
 instance.interceptors.response.use(
   function (response) {
-    // Bất kỳ mã trạng thái nào nằm trong phạm vi 2xx đều kích hoạt hàm này
-   // Xử lý dữ liệu phản hồi
-//     console.log("Interceptor response:", response);
-//     console.log("Interceptor response.data:", response?.data);
-//     console.log("Interceptor response.data.data:", response?.data?.data);
-    if(response.data && response.data.data) return response.data;
+    // 2xx: Nếu response có wrapper ApiResponse { success, data, message } thì unwrap
+    if (response.data && response.data.data !== undefined && 'success' in response.data) {
+      return response.data;
+    }
     return response;
   },
   function (error) {
-    // Bất kỳ mã trạng thái nào nằm ngoài phạm vi 2xx đều khiến hàm này được kích hoạt
-    // Xử lý lỗi phản hồi
-    // Chạy vào chế độ debug sử dụng "debugger"
-    if(error.response && error.response.data) return error.response.data;
+    // 4xx/5xx: PHẢI reject để try-catch trong service bắt được
+    // Không resolve error - đây là root cause của bug "tạo thành công nhưng hiện lỗi"
     return Promise.reject(error);
   },
 );

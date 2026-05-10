@@ -32,24 +32,12 @@ const searchMedicalRecords = async (params: {
     pageNumber: params.pageNumber ?? 1,
     pageSize: params.pageSize ?? 100,
   });
-  const wrapper = res.data;
-  const pagedResult = wrapper?.data ?? wrapper?.Data;
-  let items: unknown;
-  if (pagedResult?.data !== undefined && pagedResult?.data !== null) {
-    items = pagedResult.data;
-  } else if (pagedResult?.Data !== undefined && pagedResult?.Data !== null) {
-    items = pagedResult.Data;
-  } else if (pagedResult?.items !== undefined && pagedResult?.items !== null) {
-    items = pagedResult.items;
-  } else {
-    items = [];
-  }
-
-  if (Array.isArray(items)) {
-    return items;
-  } else {
-    return [];
-  }
+  // Interceptor đã unwrap ApiResponse → res = { success, data: PagedResult, message }
+  // res.data = PagedResult = { data: [...], pageNumber, ... }
+  // res.data.data = mảng hồ sơ bệnh án
+  const pagedResult = res.data ?? res; // fallback nếu chưa unwrap
+  const items = pagedResult?.data ?? pagedResult?.Data ?? [];
+  return Array.isArray(items) ? items : [];
 };
 
 const createMedicalRecord = async (data: {

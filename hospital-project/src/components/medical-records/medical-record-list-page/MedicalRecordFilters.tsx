@@ -1,4 +1,4 @@
-import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+﻿import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Col, Input, Row, Space } from "antd";
 
 interface Props {
@@ -8,12 +8,7 @@ interface Props {
   onReset: () => void;
 }
 
-const MedicalRecordFilters = ({
-  filterName,
-  onFilterNameChange,
-  onSearch,
-  onReset,
-}: Props) => {
+const MedicalRecordFilters = ({ filterName, onFilterNameChange, onSearch, onReset }: Props) => {
   return (
     <Row gutter={[12, 12]} align="middle">
       <Col xs={24} sm={12} md={10}>

@@ -222,7 +222,7 @@ const UpdatePatientModal = ({dataUpdate, setDataUpdate, id, setId, isModalUpdate
                                    >
                                           <Select placeholder="Chọn trạng thái">
                                                  <Select.Option value="Đang điều trị">Đang điều trị</Select.Option>
-                                                 <Select.Option value="Đã xuất viện">Chờ xuất viện</Select.Option>
+                                                 <Select.Option value="Chờ xuất viện">Chờ xuất viện</Select.Option>
                                                  <Select.Option value="Đã xuất viện">Đã xuất viện</Select.Option>
                                           </Select>
                                    </Form.Item>

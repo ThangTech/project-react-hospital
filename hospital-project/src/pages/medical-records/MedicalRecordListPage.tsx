@@ -14,8 +14,9 @@ import type { BacSi, HoSoBenhAn, NhapVien } from "../../types";
 
 const ketQuaColor = (kq: string | null): string => {
   if (!kq) return "default";
-  if (kq.toLowerCase().includes("tốt") || kq.toLowerCase().includes("khỏi")) return "success";
-  if (kq.toLowerCase().includes("nặng")) return "error";
+  const lower = kq.toLowerCase();
+  if (lower.includes("tốt") || lower.includes("khỏi")) return "success";
+  if (lower.includes("nặng") || lower.includes("xấu")) return "error";
   return "processing";
 };
 
@@ -54,10 +55,17 @@ const MedicalRecordListPage = () => {
   const onSearch = async () => {
     setLoading(true);
     try {
-      const result = await searchMedicalRecords({ searchTerm: filterName.trim() || undefined });
+      // SP đã tìm kiếm server-side theo tên bệnh nhân, tên bác sĩ, chẩn đoán...
+      // Không cần filter thêm phía client
+      const keyword = filterName.trim();
+      const result = await searchMedicalRecords({ searchTerm: keyword || undefined });
       setRecords(result);
     } catch (error: any) {
-      const msg = error?.response?.data?.message ?? error?.response?.data?.Message ?? "Tìm kiếm thất bại";
+      const msg =
+        error?.response?.data?.message ??
+        error?.response?.data?.Message ??
+        error?.message ??
+        "Tìm kiếm thất bại";
       notification.error({ message: "Lỗi tìm kiếm", description: msg });
     } finally {
       setLoading(false);
@@ -88,7 +96,7 @@ const MedicalRecordListPage = () => {
       setOpenCreate(false);
       await fetchAll();
     } catch (error: any) {
-      notification.error({ message: "Tạo hồ sơ thất bại", description: error?.response?.data?.message || "Vui lòng kiểm tra lại dữ liệu" });
+      notification.error({ message: "Tạo hồ sơ thất bại", description: error?.response?.data?.message || "Vui lÃ²ng kiá»ƒm tra láº¡i dá»¯ liá»‡u" });
     }
   };
 
@@ -121,7 +129,7 @@ const MedicalRecordListPage = () => {
       setOpenEdit(false);
       await fetchAll();
     } catch (error: any) {
-      notification.error({ message: "Cập nhật thất bại", description: error?.response?.data?.message || "Vui lòng kiểm tra lại" });
+      notification.error({ message: "Cập nhật thất bại", description: error?.response?.data?.message || "Vui lÃ²ng kiá»ƒm tra láº¡i" });
     }
   };
 
@@ -131,7 +139,7 @@ const MedicalRecordListPage = () => {
       notification.success({ message: "Đã xóa hồ sơ bệnh án" });
       await fetchAll();
     } catch (error: any) {
-      notification.error({ message: "Xóa thất bại", description: error?.response?.data?.message || "Không thể xóa hồ sơ bệnh án" });
+      notification.error({ message: "Xóa thất bại", description: error?.response?.data?.message || "KhÃ´ng thá»ƒ xÃ³a há»“ sÆ¡ bá»‡nh Ã¡n" });
     }
   };
 
@@ -151,7 +159,6 @@ const MedicalRecordListPage = () => {
   };
 
   const columns = [
-    // Ưu tiên field join sẵn từ backend (MedicalRecordDto), fallback lookup
     { title: "Bệnh nhân", key: "benhNhan", render: (record: HoSoBenhAn) => record.tenBenhNhan || getTenBenhNhanFromAdm(record.nhapVienId ?? "") },
     { title: "Bác sĩ phụ trách", key: "bacSi", render: (record: HoSoBenhAn) => record.tenBacSi || getTenBacSi(record.bacSiPhuTrachId ?? "") },
     {
@@ -253,3 +260,4 @@ const MedicalRecordListPage = () => {
 };
 
 export default MedicalRecordListPage;
+
