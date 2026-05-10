@@ -73,14 +73,29 @@ export type NhapVien = {
 // ─── HoSoBenhAn ──────────────────────────────────────────
 export type HoSoBenhAn = {
   id: string;
-  nhapVienId: string;
-  bacSiPhuTrachId: string;
+  nhapVienId: string | null;
+  bacSiPhuTrachId: string | null;
+  // Thông tin chẩn đoán
   tienSuBenh: string | null;
   chanDoanBanDau: string | null;
   phuongAnDieuTri: string | null;
   chanDoanRaVien: string | null;
   ketQuaDieuTri: string | null;
   ngayLap: string | null;
+  // Thông tin join từ backend (MedicalRecordDto)
+  tenBacSi: string | null;
+  tenBenhNhan: string | null;
+  benhNhanId: string | null;
+  ngaySinhBenhNhan: string | null;
+  gioiTinh: string | null;
+  diaChi: string | null;
+  soTheBaoHiem: string | null;
+  ngayNhap: string | null;
+  ngayXuat: string | null;
+  lyDoNhap: string | null;
+  trangThaiNhapVien: string | null;
+  tenKhoa: string | null;
+  tenGiuong: string | null;
 };
 
 // ─── LichPhauThuat ───────────────────────────────────────
