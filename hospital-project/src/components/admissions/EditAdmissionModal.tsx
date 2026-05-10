@@ -1,4 +1,4 @@
-import { DatePicker, Form, Input, Modal, Select } from "antd";
+import { DatePicker, Form, Input, Modal, Select, type FormInstance } from "antd";
 
 
 export const TRANG_THAI_OPTIONS = [
@@ -25,7 +25,7 @@ interface Props {
   open: boolean;
   onCancel: () => void;
   onFinish: (values: any) => Promise<void>;
-  form: ReturnType<typeof Form.useForm>[0];
+  form: FormInstance;
 }
 
 // ─── Component ───────────────────────────────────────────
