@@ -1,30 +1,44 @@
 import axios from "./axios.interceptor";
 import type { HoSoBenhAn } from "../types";
 
+// GET /gateway/api/medicalrecord/get-all-medical
+// Response: trực tiếp array (controller dùng Ok(result))
 const getAllMedicalRecords = async (): Promise<HoSoBenhAn[]> => {
   try {
-    const res = await axios.get("/gateway/api/hosobenhán/get-all");
-    return res.data;
+    const res = await axios.get("/gateway/api/medicalrecord/get-all-medical");
+    return res.data ?? [];
   } catch (error) {
     console.log(error);
     return [];
   }
 };
 
-const getMedicalRecordByNhapVienId = async (
-  nhapVienId: string
-): Promise<HoSoBenhAn | null> => {
+// POST /gateway/api/medicalrecord/search
+// Body: { searchTerm, pageNumber, pageSize }
+// Response: { success, data: { data: HoSoBenhAn[], ... }, message }
+const searchMedicalRecords = async (params: {
+  searchTerm?: string;
+  pageNumber?: number;
+  pageSize?: number;
+}): Promise<HoSoBenhAn[]> => {
   try {
-    const res = await axios.get(
-      `/gateway/api/hosobenhan/get-by-nhapvien/${nhapVienId}`
-    );
-    return res.data;
+    const res = await axios.post("/gateway/api/medicalrecord/search", {
+      searchTerm: params.searchTerm,
+      pageNumber: params.pageNumber ?? 1,
+      pageSize: params.pageSize ?? 100,
+    });
+    // Response: ApiResponse<PagedResult<MedicalRecordDto>>
+    const pagedResult = res.data?.data;
+    return pagedResult?.data ?? pagedResult?.items ?? [];
   } catch (error) {
     console.log(error);
-    return null;
+    return [];
   }
 };
 
+// POST /gateway/api/medicalrecord
+// Body: MedicalRecordDto
+// Response: { success, data: MedicalRecordDto, message }
 const createMedicalRecord = async (data: {
   nhapVienId: string;
   bacSiPhuTrachId: string;
@@ -34,9 +48,12 @@ const createMedicalRecord = async (data: {
   chanDoanRaVien?: string;
   ketQuaDieuTri?: string;
 }) => {
-  return axios.post("/gateway/api/hosobenhan/tao-moi", data);
+  return axios.post("/gateway/api/medicalrecord", data);
 };
 
+// PUT /gateway/api/medicalrecord/{id}
+// Body: MedicalRecordDto
+// Response: { success, data: MedicalRecordDto, message }
 const updateMedicalRecord = async (data: {
   id: string;
   bacSiPhuTrachId: string;
@@ -46,31 +63,20 @@ const updateMedicalRecord = async (data: {
   chanDoanRaVien?: string;
   ketQuaDieuTri?: string;
 }) => {
-  return axios.put("/gateway/api/hosobenhan/cap-nhat", data);
+  const { id, ...body } = data;
+  return axios.put(`/gateway/api/medicalrecord/${id}`, body);
 };
 
+// DELETE /gateway/api/medicalrecord/{id}
+// Response: { success, message }
 const deleteMedicalRecord = async (id: string) => {
-  return axios.delete(`/gateway/api/hosobenhan/xoa/${id}`);
-};
-
-const searchMedicalRecords = async (params: {
-  tenBenhNhan?: string;
-  bacSiId?: string;
-}): Promise<HoSoBenhAn[]> => {
-  try {
-    const res = await axios.post("/gateway/api/hosobenhan/tim-kiem", params);
-    return res.data;
-  } catch (error) {
-    console.log(error);
-    return [];
-  }
+  return axios.delete(`/gateway/api/medicalrecord/${id}`);
 };
 
 export {
   getAllMedicalRecords,
-  getMedicalRecordByNhapVienId,
+  searchMedicalRecords,
   createMedicalRecord,
   updateMedicalRecord,
   deleteMedicalRecord,
-  searchMedicalRecords,
 };
