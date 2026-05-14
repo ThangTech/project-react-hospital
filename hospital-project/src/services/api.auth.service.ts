@@ -14,9 +14,13 @@ type ForgotPasswordPayload = {
   Email: string;
 };
 
-type ResetPasswordPayload = {
+type VerifyResetOtpPayload = {
   Email: string;
   OtpCode: string;
+};
+
+type ResetPasswordPayload = {
+  ResetToken: string;
   MatKhauMoi: string;
 };
 
@@ -44,13 +48,19 @@ const forgotPassword = async (data: ForgotPasswordPayload) => {
   return res;
 };
 
+const verifyResetOtp = async (data: VerifyResetOtpPayload) => {
+  const url = "/gateway/api/Auth/verify-reset-otp";
+  const res = await axios.post(url, data);
+  return res;
+};
+
 const resetPassword = async (data: ResetPasswordPayload) => {
   const url = "/gateway/api/Auth/reset-password";
   const res = await axios.post(url, data);
   return res;
 };
 
-export { changePassword, forgotPassword, getAccount, loginAccount, resetPassword };
+export { changePassword, forgotPassword, getAccount, loginAccount, resetPassword, verifyResetOtp };
 // export const authService = {
 //   login: (payload: LoginPayload) =>
 //     axios.post(`${BASE_URL}/login`, payload),
