@@ -37,7 +37,6 @@ const MedicalRecordListPage = () => {
   const [detailRecord, setDetailRecord] = useState<HoSoBenhAn | null>(null);
 
   const [filterName, setFilterName] = useState("");
-  const [filterBacSiId, setFilterBacSiId] = useState<string | undefined>();
 
   const fetchAll = async () => {
     setLoading(true);
@@ -74,7 +73,6 @@ const MedicalRecordListPage = () => {
 
   const onResetFilter = () => {
     setFilterName("");
-    setFilterBacSiId(undefined);
     fetchAll();
   };
 

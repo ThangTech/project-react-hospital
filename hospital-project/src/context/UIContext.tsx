@@ -2,7 +2,7 @@
 // Thay thế Recoil uiAtom (sidebarCollapsed, globalLoading).
 // Dùng React Context thuần.
 
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useState, type ReactNode } from 'react';
 
 type UIContextType = {
   sidebarCollapsed: boolean;

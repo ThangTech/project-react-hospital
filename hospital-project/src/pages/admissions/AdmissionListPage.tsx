@@ -1,28 +1,8 @@
-import {
-  DeleteOutlined,
-  EditOutlined,
-  PlusOutlined,
-  ReloadOutlined,
-  SearchOutlined,
-  SwapOutlined,
-} from "@ant-design/icons";
-import {
-  Button,
-  Col,
-  DatePicker,
-  Form,
-  Input,
-  Popconfirm,
-  Row,
-  Select,
-  Space,
-  Table,
-  Tag,
-  Typography,
-  notification,
-} from "antd";
+import { DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined, SearchOutlined, SwapOutlined } from "@ant-design/icons";
+import { Button, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Space, Table, Tag, Typography, notification } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import type { BenhNhan, GiuongBenh, KhoaPhong, NhapVien } from "../../types";
 import {
   createAdmission,
@@ -43,7 +23,10 @@ import EditAdmissionModal from "../../components/admissions/EditAdmissionModal";
 import TransferBedModal from "../../components/admissions/TransferBedModal";
 
 const AdmissionListPage = () => {
+  const [searchParams] = useSearchParams();
+  const defaultTab = searchParams.get("tab") === "discharge" ? "discharge" : "admission";
 
+  const [activeTab] = useState(defaultTab);
   const [admissions, setAdmissions] = useState<NhapVien[]>([]);
   const [patients, setPatients] = useState<BenhNhan[]>([]);
   const [beds, setBeds] = useState<GiuongBenh[]>([]);
@@ -231,6 +214,8 @@ const AdmissionListPage = () => {
   const availableBeds = beds.filter((b) => b.trangThai === "Trống");
 
   
+  const dischargeRows = admissions.filter((item) => item.trangThai === "Chờ xuất viện");
+
   const columns = [
     {
       title: "Bệnh nhân",
@@ -410,17 +395,31 @@ const AdmissionListPage = () => {
       </Row>
 
    
-      <Table
-        rowKey="id"
-        loading={loading}
-        dataSource={admissions}
-        columns={columns}
-        scroll={{ x: 900 }}
-        pagination={{
-          pageSize: 10,
-          showTotal: (t) => `Tổng ${t} phiếu`,
-        }}
-      />
+      {activeTab === "admission" ? (
+        <Table
+          rowKey="id"
+          loading={loading}
+          dataSource={admissions}
+          columns={columns}
+          scroll={{ x: 900 }}
+          pagination={{
+            pageSize: 10,
+            showTotal: (t) => `Tổng ${t} phiếu`,
+          }}
+        />
+      ) : (
+        <Table
+          rowKey="id"
+          loading={loading}
+          dataSource={dischargeRows}
+          columns={columns}
+          scroll={{ x: 900 }}
+          pagination={{
+            pageSize: 10,
+            showTotal: (t) => `Tổng ${t} phiếu`,
+          }}
+        />
+      )}
 
    
       <CreateAdmissionModal

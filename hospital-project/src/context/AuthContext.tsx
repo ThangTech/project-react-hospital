@@ -6,7 +6,7 @@
 //   - Bọc app bằng <AuthProvider>
 //   - Dùng hook useAuth() ở bất kỳ component con nào
 
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { createContext, useState, type ReactNode } from 'react';
 
 // ─── Types ───────────────────────────────────────────────
 export type UserRole = 'Admin' | 'BacSi' | 'YTa' | 'KeToan' | 'BenhNhan';

@@ -41,6 +41,7 @@ import BedListPage from "./pages/beds/BedListPage.tsx";
 import SurgeryListPage from "./pages/surgeries/SurgeryListPage.tsx";
 import InvoiceListPage from "./pages/invoices/InvoiceListPage.tsx";
 import ReportPage from "./pages/reports/ReportPage.tsx";
+import AuditLogPage from "./pages/audit/AuditLogPage.tsx";
 
 // Shared components
 import ProtectedRoute from "./components/shared/ProtectedRoute.tsx";
@@ -86,6 +87,7 @@ const router = createBrowserRouter([
       { path: "/dashboard/beds",            element: <BedListPage /> },
       { path: "/dashboard/invoices",        element: <InvoiceListPage /> },
       { path: "/dashboard/reports",         element: <ReportPage /> },
+      { path: "/dashboard/audit",            element: <AuditLogPage /> },
     ],
   },
 

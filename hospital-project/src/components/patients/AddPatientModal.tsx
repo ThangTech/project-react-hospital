@@ -1,7 +1,7 @@
-import { Modal, Form, Input, Select, DatePicker, InputNumber, Upload, notification} from "antd";
-import { createPatient } from "../../services/api.patient.service";
-import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
+import { DatePicker, Form, Input, InputNumber, Modal, Select, Upload, notification } from "antd";
+import { useState } from "react";
+import { createPatient } from "../../services/api.patient.service";
 interface Props {
        isModalOpen: boolean;
        setIsModalOpen: (value: boolean) => void;

@@ -1,13 +1,12 @@
-﻿import { EditOutlined, DeleteOutlined, SearchOutlined, PlusOutlined, ReloadOutlined, DownloadOutlined } from "@ant-design/icons";
-import { Popconfirm, Input, DatePicker, Button, notification, Tooltip } from "antd";
-import { deletePatient, exportExcelPatient, getAllPatients, searchPatients } from "../../services/api.patient.service";
-import { useState, useEffect } from "react";
-import type { BenhNhan } from "../../types";
-import { Table } from "antd";
+﻿import { DeleteOutlined, DownloadOutlined, EditOutlined, PlusOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Input, Popconfirm, Table, Tooltip, notification } from "antd";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
+import type { BenhNhan } from "../../types";
 import AddPatientModal from "../../components/patients/AddPatientModal";
 import UpdatePatientModal from "../../components/patients/UpdatePatientModal";
-import { useNavigate } from "react-router-dom";
+import { deletePatient, exportExcelPatient, getAllPatients, searchPatients } from "../../services/api.patient.service";
 const PatientListPage = () => {
        const navigate = useNavigate();
        const [address, setAddress] = useState('');

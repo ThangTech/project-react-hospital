@@ -5,26 +5,6 @@ type LoginPayload = {
   MatKhau: string;
 };
 
-type RegisterPayload = {
-  TenDangNhap: string;
-  MatKhau: string;
-  VaiTro: string;
-};
-
-type ForgotPasswordPayload = {
-  TenDangNhap: string;
-};
-
-type ResetPasswordPayload = {
-  TenDangNhap: string;
-  ResetToken: string;
-  MatKhauMoi: string;
-};
-
-type ChangePasswordPayload = {
-  MatKhauCu: string;
-  MatKhauMoi: string;
-};
 const loginAccount = async(data: LoginPayload) => {
        const url = "/gateway/api/Auth/login";
        const res = await axios.post(url, data)

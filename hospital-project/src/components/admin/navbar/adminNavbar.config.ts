@@ -39,6 +39,7 @@ export const menuConfig: NavItem[] = [
     roles: ['Admin', 'KeToan'],
     children: [
       { label: 'Báo cáo tổng hợp',  path: '/dashboard/reports' },
+      { label: 'Audit log',         path: '/dashboard/audit' },
       { label: 'Thống kê Dashboard', path: '/dashboard/admin' },
     ],
   },
