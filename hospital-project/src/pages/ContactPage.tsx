@@ -1,5 +1,4 @@
 import { Form, Input, Button } from "antd";
-import { Phone, MapPin, Clock, Mail } from "lucide-react";
 import PageHero from "../components/shared/PageHero";
 import SectionTitle from "../components/shared/SectionTitle";
 
@@ -41,29 +40,25 @@ const ContactPage = () => {
             <div className="space-y-5 mt-6">
               {[
                 {
-                  icon: <Phone size={20} />,
                   label: "Hotline",
                   value: "1900 xxxx (24/7)",
                 },
                 {
-                  icon: <Mail size={20} />,
                   label: "Email",
                   value: "contact@hospital.vn",
                 },
                 {
-                  icon: <MapPin size={20} />,
                   label: "Địa chỉ",
                   value: "123 Đường ABC, Quận 1, TP. HCM",
                 },
                 {
-                  icon: <Clock size={20} />,
                   label: "Giờ làm việc",
                   value: "Thứ 2 – Thứ 7: 7:00 – 20:00 | Cấp cứu: 24/7",
                 },
               ].map((info) => (
                 <div key={info.label} className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-[#005b96]/10 rounded-xl flex items-center justify-center flex-shrink-0 text-[#005b96]">
-                    {info.icon}
+                  <div className="w-10 h-10 bg-[#005b96]/10 rounded-xl flex items-center justify-center flex-shrink-0 text-[#005b96] font-semibold">
+                    •
                   </div>
                   <div>
                     <div className="text-xs text-gray-400 font-medium">

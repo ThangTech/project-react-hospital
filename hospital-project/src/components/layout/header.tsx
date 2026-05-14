@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { ChevronDown, Menu, X } from "lucide-react";
 import logo from "../../assets/logo.jpg";
 import { useAuth } from '../../hooks/useAuth';
 
@@ -74,7 +73,7 @@ const Header = () => {
                                                                ].join(" ")}
                                                         >
                                                                {item.label}
-                                                               {item.children && <ChevronDown size={14} />}
+                                                               {item.children && <span>▾</span>}
                                                         </Link>
 
 
@@ -125,7 +124,7 @@ const Header = () => {
                                           className="lg:hidden p-2 text-gray-600 hover:text-[#005b96] cursor-pointer"
                                           onClick={() => setMobileOpen(!mobileOpen)}
                                    >
-                                          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+                                          {mobileOpen ? <span>×</span> : <span>☰</span>}
                                    </button>
                             </div>
                      </div>
