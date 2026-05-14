@@ -157,8 +157,18 @@ const MedicalRecordListPage = () => {
   };
 
   const columns = [
-    { title: "Bệnh nhân", key: "benhNhan", render: (record: HoSoBenhAn) => record.tenBenhNhan || getTenBenhNhanFromAdm(record.nhapVienId ?? "") },
-    { title: "Bác sĩ phụ trách", key: "bacSi", render: (record: HoSoBenhAn) => record.tenBacSi || getTenBacSi(record.bacSiPhuTrachId ?? "") },
+    {
+      title: "Bệnh nhân",
+      key: "benhNhan",
+      render: (record: HoSoBenhAn) =>
+        record.tenBenhNhan || getTenBenhNhanFromAdm(record.nhapVienId ?? ""),
+    },
+    {
+      title: "Bác sĩ phụ trách",
+      key: "bacSi",
+      render: (record: HoSoBenhAn) =>
+        record.tenBacSi || getTenBacSi(record.bacSiPhuTrachId ?? ""),
+    },
     {
       title: "Chẩn đoán ban đầu",
       dataIndex: "chanDoanBanDau",
@@ -198,7 +208,12 @@ const MedicalRecordListPage = () => {
           <Tag color="default">Chưa có</Tag>
         ),
     },
-    { title: "Ngày lập", dataIndex: "ngayLap", key: "ngayLap", render: (v: string | null) => (v ? dayjs(v).format("DD/MM/YYYY") : "--") },
+    {
+      title: "Ngày lập",
+      dataIndex: "ngayLap",
+      key: "ngayLap",
+      render: (v: string | null) => (v ? dayjs(v).format("DD/MM/YYYY") : "--"),
+    },
     {
       title: "Thao tác",
       key: "action",
