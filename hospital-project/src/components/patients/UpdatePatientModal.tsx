@@ -53,7 +53,7 @@ const UpdatePatientModal = ({dataUpdate, setDataUpdate, isModalUpdateOpen, setIs
                      formData.append("soTheBaoHiem", values.soTheBaoHiem || "");
                      formData.append("mucHuong", values.mucHuong ? String(values.mucHuong / 100) : "");
                      formData.append("hanTheBHYT", values.hanTheBHYT?.format("YYYY-MM-DD") || "");
-                     formData.append("trangThai", values.trangThai || "Đang điều trị");
+                     formData.append("trangThai", dataUpdate?.trangThai || "Chưa nhập viện");
 
                      if (file) {
                             formData.append("avatar", file);
@@ -214,13 +214,8 @@ const UpdatePatientModal = ({dataUpdate, setDataUpdate, isModalUpdateOpen, setIs
                                    <Form.Item
                                           label="Trạng thái"
                                           name="trangThai"
-                                          initialValue="Đang điều trị"
                                    >
-                                          <Select placeholder="Chọn trạng thái">
-                                                 <Select.Option value="Đang điều trị">Đang điều trị</Select.Option>
-                                                 <Select.Option value="Chờ xuất viện">Chờ xuất viện</Select.Option>
-                                                 <Select.Option value="Đã xuất viện">Đã xuất viện</Select.Option>
-                                          </Select>
+                                          <Input disabled />
                                    </Form.Item>
                                    <Form.Item label="Ảnh đại diện" name="avatar">
                                           <Upload

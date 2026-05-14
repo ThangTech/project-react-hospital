@@ -25,7 +25,7 @@ const AddPatientModal = ({ isModalOpen, setIsModalOpen, onSuccess }: Props) => {
                      formData.append("soTheBaoHiem", values.soTheBaoHiem || "");
                      formData.append("mucHuong", values.mucHuong ? String(values.mucHuong / 100) : "");
                      formData.append("hanTheBHYT", values.hanTheBHYT?.format("YYYY-MM-DD") || "");
-                     formData.append("trangThai", values.trangThai || "Đang điều trị");
+                     formData.append("trangThai", values.trangThai || "Chưa nhập viện");
 
                      if (file) {
                             formData.append("avatar", file);
@@ -176,9 +176,10 @@ const AddPatientModal = ({ isModalOpen, setIsModalOpen, onSuccess }: Props) => {
                             <Form.Item
                                    label="Trạng thái"
                                    name="trangThai"
-                                   initialValue="Đang điều trị"
+                                   initialValue="Chưa nhập viện"
                             >
                                    <Select placeholder="Chọn trạng thái">
+                                          <Select.Option value="Chưa nhập viện">Chưa nhập viện</Select.Option>
                                           <Select.Option value="Đang điều trị">Đang điều trị</Select.Option>
                                           <Select.Option value="Đã xuất viện">Đã xuất viện</Select.Option>
                                    </Select>
