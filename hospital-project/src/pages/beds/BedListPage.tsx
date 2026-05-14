@@ -19,6 +19,7 @@ const BedListPage = () => {
        const [departments, setDepartments] = useState<KhoaPhong[]>([]);
        const [loadingBed, setLoadingBed] = useState(false);
        const [loadingDepartment, setLoadingDepartment] = useState(false);
+       const [giuongKeyword, setGiuongKeyword] = useState("");
        const [khoaKeyword, setKhoaKeyword] = useState("");
        const [bedForm] = Form.useForm();
        const [deptForm] = Form.useForm();
@@ -57,6 +58,20 @@ const BedListPage = () => {
               bedForm.setFieldsValue({ ...record, khoaId: (record as any).khoaId });
               setOpenBedModal(true);
        };
+
+       const filteredBeds = beds.filter((bed) => {
+              const keyword = giuongKeyword.trim().toLowerCase();
+              if (!keyword) return true;
+
+              const khoa = departments.find((d) => d.id === (bed as any).khoaId);
+              return (
+                     bed.tenGiuong?.toLowerCase().includes(keyword) ||
+                     bed.loaiGiuong?.toLowerCase().includes(keyword) ||
+                     bed.trangThai?.toLowerCase().includes(keyword) ||
+                     khoa?.tenKhoa?.toLowerCase().includes(keyword) ||
+                     khoa?.loaiKhoa?.toLowerCase().includes(keyword)
+              );
+       });
 
        const onSaveBed = async (values: any) => {
               try {
@@ -143,12 +158,22 @@ const BedListPage = () => {
                                           children: (
                                                  <>
                                                         <Space style={{ marginBottom: 12 }}>
+                                                               <Input
+                                                                      placeholder="Tìm giường / loại / trạng thái / khoa"
+                                                                      style={{ width: 320 }}
+                                                                      value={giuongKeyword}
+                                                                      onChange={(e) => setGiuongKeyword(e.target.value)}
+                                                               />
+                                                               <Button icon={<SearchOutlined />} onClick={() => setGiuongKeyword(giuongKeyword)}>
+                                                                      Tìm kiếm
+                                                               </Button>
+                                                               <Button onClick={() => setGiuongKeyword("")}>Đặt lại</Button>
                                                                <Button type="primary" icon={<PlusOutlined />} onClick={onOpenCreateBed}>Thêm giường</Button>
                                                         </Space>
                                                         <Table
                                                                rowKey="id"
                                                                loading={loadingBed}
-                                                               dataSource={beds}
+                                                               dataSource={filteredBeds}
                                                                columns={[
                                                                       { title: "Mã giường", dataIndex: "id" },
                                                                       { title: "Tên giường", dataIndex: "tenGiuong" },
