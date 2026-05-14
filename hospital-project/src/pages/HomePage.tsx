@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import HeroSlider from "../components/home/HeroSlider";
 import StatsStrip from "../components/home/StatsStrip";
 import AboutSection from "../components/home/AboutSection";
+import QuickActionSection from "../components/home/QuickActionSection";
 import ServicesSection from "../components/home/ServicesSection";
 import FaqSection from "../components/home/FaqSection";
 import DoctorsSection from "../components/home/DoctorsSection";
@@ -49,6 +50,7 @@ const HomePage = () => {
       <HeroSlider />
       <StatsStrip stats={stats} />
       <AboutSection />
+      <QuickActionSection />
       <ServicesSection departments={departments} />
       <FaqSection />
       <DoctorsSection doctors={doctors} />
