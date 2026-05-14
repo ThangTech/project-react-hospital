@@ -37,6 +37,7 @@ import AccountantDashboard from "./pages/dashboard/AccountantDashboard.tsx";
 import PatientListPage from "./pages/patients/PatientListPage.tsx";
 import PatientDetailPage from "./pages/patients/PatientDetailPage.tsx";
 import AdmissionListPage from "./pages/admissions/AdmissionListPage.tsx";
+import DischargeListPage from "./pages/admissions/DischargeListPage.tsx";
 import MedicalRecordListPage from "./pages/medical-records/MedicalRecordListPage.tsx";
 import BedListPage from "./pages/beds/BedListPage.tsx";
 import SurgeryListPage from "./pages/surgeries/SurgeryListPage.tsx";
@@ -84,6 +85,7 @@ const router = createBrowserRouter([
       { path: "/dashboard/patients",        element: <PatientListPage /> },
       { path: "/dashboard/patients/:id",    element: <PatientDetailPage /> },
       { path: "/dashboard/admissions",      element: <AdmissionListPage /> },
+      { path: "/dashboard/discharge",       element: <DischargeListPage /> },
       { path: "/dashboard/medical-records", element: <MedicalRecordListPage /> },
       { path: "/dashboard/surgeries",       element: <SurgeryListPage /> },
       { path: "/dashboard/beds",            element: <BedListPage /> },

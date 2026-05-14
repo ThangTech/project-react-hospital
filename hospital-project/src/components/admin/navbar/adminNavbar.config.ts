@@ -30,7 +30,7 @@ export const menuConfig: NavItem[] = [
     children: [
       { label: 'Danh sách bệnh nhân', path: '/dashboard/patients' },
       { label: 'Nhập viện',           path: '/dashboard/admissions' },
-      { label: 'Xuất viện',           path: '/dashboard/admissions?tab=discharge' },
+      { label: 'Xuất viện',           path: '/dashboard/discharge' },
       { label: 'Quản lý giường',      path: '/dashboard/beds' },
     ],
   },
