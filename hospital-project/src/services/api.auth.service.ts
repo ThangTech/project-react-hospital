@@ -10,6 +10,16 @@ type ChangePasswordPayload = {
   MatKhauMoi: string;
 };
 
+type ForgotPasswordPayload = {
+  Email: string;
+};
+
+type ResetPasswordPayload = {
+  Email: string;
+  OtpCode: string;
+  MatKhauMoi: string;
+};
+
 const loginAccount = async (data: LoginPayload) => {
   const url = "/gateway/api/Auth/login";
   const res = await axios.post(url, data);
@@ -28,7 +38,19 @@ const changePassword = async (data: ChangePasswordPayload) => {
   return res;
 };
 
-export { changePassword, getAccount, loginAccount };
+const forgotPassword = async (data: ForgotPasswordPayload) => {
+  const url = "/gateway/api/Auth/forgot-password";
+  const res = await axios.post(url, data);
+  return res;
+};
+
+const resetPassword = async (data: ResetPasswordPayload) => {
+  const url = "/gateway/api/Auth/reset-password";
+  const res = await axios.post(url, data);
+  return res;
+};
+
+export { changePassword, forgotPassword, getAccount, loginAccount, resetPassword };
 // export const authService = {
 //   login: (payload: LoginPayload) =>
 //     axios.post(`${BASE_URL}/login`, payload),
