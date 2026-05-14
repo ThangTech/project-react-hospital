@@ -23,6 +23,7 @@ import ContactPage from "./pages/ContactPage.tsx";
 import LoginPage from "./pages/auth/LoginPage.tsx";
 import RegisterPage from "./pages/auth/RegisterPage.tsx";
 import ForgotPasswordPage from "./pages/auth/ForgotPassword.tsx";
+import ChangePasswordPage from "./pages/auth/ChangePasswordPage.tsx";
 
 // Error pages
 import ErrorPage from "./pages/errors/error.tsx";
@@ -66,6 +67,7 @@ const router = createBrowserRouter([
   { path: "/login", element: <LoginPage /> },
   { path: "/register", element: <RegisterPage /> },
   { path: "/forgot-password", element: <ForgotPasswordPage /> },
+  { path: "/change-password", element: <ChangePasswordPage /> },
 
   // ═══ Admin layout (AdminNavbar, không Footer) ═══
   {

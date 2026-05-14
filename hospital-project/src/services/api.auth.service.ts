@@ -5,17 +5,30 @@ type LoginPayload = {
   MatKhau: string;
 };
 
-const loginAccount = async(data: LoginPayload) => {
-       const url = "/gateway/api/Auth/login";
-       const res = await axios.post(url, data)
-       return res;
-}
-const getAccount = async() => {
-       const url = "/gateway/api/auth/me";
-       const res = await axios.get(url);
-       return res;
-}
-export {loginAccount, getAccount}
+type ChangePasswordPayload = {
+  MatKhauCu: string;
+  MatKhauMoi: string;
+};
+
+const loginAccount = async (data: LoginPayload) => {
+  const url = "/gateway/api/Auth/login";
+  const res = await axios.post(url, data);
+  return res;
+};
+
+const getAccount = async () => {
+  const url = "/gateway/api/auth/me";
+  const res = await axios.get(url);
+  return res;
+};
+
+const changePassword = async (data: ChangePasswordPayload) => {
+  const url = "/gateway/api/Auth/change-password";
+  const res = await axios.post(url, data);
+  return res;
+};
+
+export { changePassword, getAccount, loginAccount };
 // export const authService = {
 //   login: (payload: LoginPayload) =>
 //     axios.post(`${BASE_URL}/login`, payload),

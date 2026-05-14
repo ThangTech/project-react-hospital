@@ -3,11 +3,11 @@
 // Hiển thị avatar + tên user, dropdown: đổi mật khẩu / đăng xuất.
 // Dùng Dropdown của Ant Design — không cần quản lý state mở/đóng thủ công.
 
-import { useNavigate } from 'react-router-dom';
-import { Dropdown } from 'antd';
-import type { MenuProps } from 'antd';
-import { ChevronDown, KeyRound, LogOut } from 'lucide-react';
-import { useAuth } from '../../../hooks/useAuth';
+import { useNavigate } from "react-router-dom";
+import { Dropdown } from "antd";
+import type { MenuProps } from "antd";
+import { ChevronDown } from "lucide-react";
+import { useAuth } from "../../../hooks/useAuth";
 
 type Props = {
   userName: string;
@@ -23,29 +23,25 @@ const NavUserMenu = ({ userName, userRole }: Props) => {
     navigate('/login');
   };
 
-  const items: MenuProps['items'] = [
+  const items: MenuProps["items"] = [
     {
-      key: 'header',
+      key: "header",
       label: (
         <div className="px-1 py-0.5">
-          <div className="text-sm font-semibold text-gray-800 truncate max-w-[150px]">
-            {userName}
-          </div>
+          <div className="text-sm font-semibold text-gray-800 truncate max-w-[150px]">{userName}</div>
           <div className="text-xs text-gray-400">{userRole}</div>
         </div>
       ),
       disabled: true,
     },
-    { type: 'divider' },
+    { type: "divider" },
     {
-      key: 'change-password',
-      icon: <KeyRound size={14} />,
-      label: 'Đổi mật khẩu',
-      onClick: () => navigate('/change-password'),
+      key: "change-password",
+      label: "Đổi mật khẩu",
+      onClick: () => navigate("/change-password"),
     },
     {
-      key: 'logout',
-      icon: <LogOut size={14} />,
+      key: "logout",
       label: <span className="text-white-600">Đăng xuất</span>,
       danger: true,
       onClick: handleLogout,
