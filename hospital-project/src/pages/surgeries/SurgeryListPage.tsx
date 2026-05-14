@@ -115,7 +115,7 @@ const SurgeryListPage = () => {
       render: (v: string | null) => v || "--",
     },
     {
-      title: "Loại phẫu thuật",
+      title: "Loại phẫu thuật / thủ thuật",
       dataIndex: "loaiPhauThuat",
       key: "loaiPhauThuat",
     },
