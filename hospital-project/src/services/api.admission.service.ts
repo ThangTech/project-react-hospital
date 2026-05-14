@@ -39,6 +39,16 @@ const updateAdmission = async (data: {
   return axios.put("/gateway/api/nhapvien/cap-nhat", data);
 };
 
+const confirmDischarge = async (data: {
+  id: string;
+  ngayXuat?: string | null;
+  chanDoanXuatVien: string;
+  loiDanBacSi: string;
+  ghiChu?: string;
+}) => {
+  return axios.put("/gateway/api/XuatVien/xac-nhan", data);
+};
+
 const deleteAdmission = async (id: string) => {
   return axios.delete(`/gateway/api/nhapvien/xoa/${id}`);
 };
@@ -72,6 +82,7 @@ export {
   getAdmissionById,
   createAdmission,
   updateAdmission,
+  confirmDischarge,
   deleteAdmission,
   transferBed,
   searchAdmissions,

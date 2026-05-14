@@ -2,15 +2,10 @@ import { CheckCircleOutlined, ReloadOutlined, SearchOutlined } from "@ant-design
 import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Table, Tag, Typography, notification } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { getAllAdmissions, searchAdmissions, updateAdmission } from "../../services/api.admission.service";
+import { confirmDischarge, getAllAdmissions, searchAdmissions } from "../../services/api.admission.service";
 import { getAllDepartments } from "../../services/api.bed-department.service";
 import type { KhoaPhong, NhapVien } from "../../types";
 import { trangThaiColor } from "../../components/admissions/EditAdmissionModal";
-
-const DISCHARGE_STATUS_OPTIONS = [
-  { label: "Đã xuất viện", value: "Đã xuất viện" },
-  { label: "Chờ xuất viện", value: "Chờ xuất viện" },
-];
 
 const DischargeListPage = () => {
   const [form] = Form.useForm();
@@ -63,8 +58,10 @@ const DischargeListPage = () => {
   const openDischargeModal = (record: NhapVien) => {
     setSelectedRecord(record);
     form.setFieldsValue({
-      trangThai: "Đã xuất viện",
-      ngayXuat: record.ngayXuat ? dayjs(record.ngayXuat) : dayjs(),
+      ngayXuat: dayjs(),
+      chanDoanXuatVien: "",
+      loiDanBacSi: "",
+      ghiChu: "",
     });
     setOpenDischarge(true);
   };
@@ -72,11 +69,12 @@ const DischargeListPage = () => {
   const onSaveDischarge = async (values: any) => {
     if (!selectedRecord) return;
     try {
-      await updateAdmission({
+      await confirmDischarge({
         id: selectedRecord.id,
-        lyDoNhap: selectedRecord.lyDoNhap,
-        trangThai: values.trangThai,
         ngayXuat: values.ngayXuat ? dayjs(values.ngayXuat).toISOString() : null,
+        chanDoanXuatVien: values.chanDoanXuatVien,
+        loiDanBacSi: values.loiDanBacSi,
+        ghiChu: values.ghiChu,
       });
       notification.success({ message: "Chốt xuất viện thành công" });
       setOpenDischarge(false);
@@ -186,11 +184,17 @@ const DischargeListPage = () => {
         destroyOnClose
       >
         <Form form={form} layout="vertical" onFinish={onSaveDischarge}>
-          <Form.Item name="trangThai" label="Trạng thái" rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}>
-            <Select options={DISCHARGE_STATUS_OPTIONS} />
-          </Form.Item>
           <Form.Item name="ngayXuat" label="Ngày xuất viện" rules={[{ required: true, message: "Vui lòng chọn ngày xuất viện" }]}>
             <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
+          </Form.Item>
+          <Form.Item name="chanDoanXuatVien" label="Chẩn đoán xuất viện" rules={[{ required: true, message: "Vui lòng nhập chẩn đoán xuất viện" }]}>
+            <Input.TextArea rows={3} />
+          </Form.Item>
+          <Form.Item name="loiDanBacSi" label="Lời dặn bác sĩ" rules={[{ required: true, message: "Vui lòng nhập lời dặn" }]}>
+            <Input.TextArea rows={3} />
+          </Form.Item>
+          <Form.Item name="ghiChu" label="Ghi chú">
+            <Input.TextArea rows={2} />
           </Form.Item>
         </Form>
       </Modal>
