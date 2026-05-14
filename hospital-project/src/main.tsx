@@ -36,6 +36,7 @@ import NurseDashboard from "./pages/dashboard/NurseDashboard.tsx";
 import AccountantDashboard from "./pages/dashboard/AccountantDashboard.tsx";
 import PatientListPage from "./pages/patients/PatientListPage.tsx";
 import PatientDetailPage from "./pages/patients/PatientDetailPage.tsx";
+import PatientPortalPage from "./pages/patient/PatientPortalPage.tsx";
 import AdmissionListPage from "./pages/admissions/AdmissionListPage.tsx";
 import DischargeListPage from "./pages/admissions/DischargeListPage.tsx";
 import MedicalRecordListPage from "./pages/medical-records/MedicalRecordListPage.tsx";
@@ -82,6 +83,7 @@ const router = createBrowserRouter([
       { path: "/dashboard/doctor",     element: <DoctorDashboard /> },
       { path: "/dashboard/nurse",      element: <NurseDashboard /> },
       { path: "/dashboard/accountant", element: <AccountantDashboard /> },
+      { path: "/dashboard/patient",    element: <PatientPortalPage /> },
       { path: "/dashboard/patients",        element: <PatientListPage /> },
       { path: "/dashboard/patients/:id",    element: <PatientDetailPage /> },
       { path: "/dashboard/admissions",      element: <AdmissionListPage /> },

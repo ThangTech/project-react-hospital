@@ -43,6 +43,8 @@ const LoginPage = () => {
           navigate('/dashboard/nurse');
         } else if (role === 'KeToan') {
           navigate('/dashboard/accountant');
+        } else if (role === 'BenhNhan') {
+          navigate('/dashboard/patient');
         } else {
           navigate('/');
         }
