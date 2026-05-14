@@ -1,32 +1,24 @@
-import { ArrowLeftOutlined} from "@ant-design/icons";
-import {
-       Avatar,
-       Button,
-       Card,
-       Col,
-       Descriptions,
-       Empty,
-       Row,
-       Skeleton,
-       Space,
-       Tag,
-       Typography,
-} from "antd";
+import { ArrowLeftOutlined } from "@ant-design/icons";
+import { Avatar, Button, Card, Col, Descriptions, Empty, Row, Skeleton, Space, Tag, Tabs, Typography } from "antd";
 import dayjs from "dayjs";
-import { useNavigate, useParams } from "react-router-dom";
-import { getPatientById } from "../../services/api.patient.service";
 import { useEffect, useState } from "react";
-import type { BenhNhan } from "../../types";
+import { useNavigate, useParams } from "react-router-dom";
+import { getAllAdmissions } from "../../services/api.admission.service";
+import { getAllInvoices } from "../../services/api.invoice.service";
+import { getAllMedicalRecords } from "../../services/api.medical-record.service";
+import { getAllSurgeries } from "../../services/api.surgery.service";
+import { getPatientById } from "../../services/api.patient.service";
+import type { BenhNhan, HoaDon, HoSoBenhAn, LichPhauThuat, NhapVien } from "../../types";
 
 const PatientDetailPage = () => {
-       const { id } = useParams();
-       const navigate = useNavigate();
-       const [dataDetail, setDataDetail] = useState<BenhNhan | null>(null);
-       const [loading, setLoading] = useState(false);
-       const [age, setAge] = useState("--");
-       const [insuranceRate, setInsuranceRate] = useState("--");
-       const [insuranceExpiry, setInsuranceExpiry] = useState("--");
-  const [isInsuranceExpired, setIsInsuranceExpired] = useState<boolean | null>(null);
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [dataDetail, setDataDetail] = useState<BenhNhan | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [admissions, setAdmissions] = useState<NhapVien[]>([]);
+  const [medicalRecords, setMedicalRecords] = useState<HoSoBenhAn[]>([]);
+  const [surgeries, setSurgeries] = useState<LichPhauThuat[]>([]);
+  const [invoices, setInvoices] = useState<HoaDon[]>([]);
 
   const resolveImageUrl = (url?: string | null) => {
     if (!url) return undefined;
@@ -35,167 +27,225 @@ const PatientDetailPage = () => {
     return `${baseUrl}${url.startsWith("/") ? "" : "/"}${url}`;
   };
 
-       useEffect(() => {
-              getById();
-       }, [id]);
+  const loadAll = async () => {
+    if (!id) return;
+    setLoading(true);
 
-       const getById = async () => {
-              if (!id) return;
-              setLoading(true);
-              try {
-                     const res = await getPatientById(id);
-                     if (res?.data) {
-                            setDataDetail(res.data)
-                            console.log(dataDetail?.avatar);
-                     }
-              } catch (error) {
-                     console.log(error);
-              } finally {
-                     setLoading(false);
-              }
-       };
+    const [patientRes, admissionList, medicalList, surgeryList, invoiceList] = await Promise.all([
+      getPatientById(id),
+      getAllAdmissions(),
+      getAllMedicalRecords(),
+      getAllSurgeries(),
+      getAllInvoices(),
+    ]);
 
-       useEffect(() => {
-              if (!dataDetail) {
-                     setAge("--");
-                     setInsuranceRate("--");
-                     setInsuranceExpiry("--");
-                     setIsInsuranceExpired(null);
-                     return;
-              }
+    if (patientRes?.data) {
+      setDataDetail(patientRes.data);
+    } else {
+      setDataDetail(null);
+    }
 
-              if (dataDetail.ngaySinh) {
-                     setAge(`${dayjs().diff(dayjs(dataDetail.ngaySinh), "year")} tuổi`);
-              } else {
-                     setAge("--");
-              }
+    setAdmissions(admissionList.filter((item) => item.benhNhanId === id));
+    setMedicalRecords(medicalList.filter((item) => item.benhNhanId === id));
+    setSurgeries(surgeryList.filter((item) => item.benhNhanId === id));
+    setInvoices(invoiceList.filter((item) => item.benhNhanId === id));
+    setLoading(false);
+  };
 
-              if (dataDetail.mucHuong === null || dataDetail.mucHuong === undefined) {
-                     setInsuranceRate("--");
-              } else {
-                     setInsuranceRate(`${(dataDetail.mucHuong * 100).toFixed(0)}%`);
-              }
+  useEffect(() => {
+    void loadAll();
+  }, [id]);
 
-              if (!dataDetail.hanTheBHYT) {
-                     setInsuranceExpiry("--");
-                     setIsInsuranceExpired(null);
-              } else {
-                     setInsuranceExpiry(dayjs(dataDetail.hanTheBHYT).format("DD/MM/YYYY"));
-                     setIsInsuranceExpired(dayjs(dataDetail.hanTheBHYT).isBefore(dayjs(), "day"));
-              }
-       }, [dataDetail]);
+  let age = "--";
+  if (dataDetail?.ngaySinh) {
+    age = `${dayjs().diff(dayjs(dataDetail.ngaySinh), "year")} tuổi`;
+  }
 
-       const renderInsuranceTag = () => {
-              if (!dataDetail?.hanTheBHYT) {
-                     return <Tag>Chưa có thông tin</Tag>;
-              }
+  let insuranceRate = "--";
+  if (dataDetail?.mucHuong !== null && dataDetail?.mucHuong !== undefined) {
+    insuranceRate = `${(dataDetail.mucHuong * 100).toFixed(0)}%`;
+  }
 
-              if (isInsuranceExpired) {
-                     return <Tag color="red">Đã hết hạn</Tag>;
-              }
+  let insuranceExpiry = "--";
+  if (dataDetail?.hanTheBHYT) {
+    insuranceExpiry = dayjs(dataDetail.hanTheBHYT).format("DD/MM/YYYY");
+  }
 
-              return <Tag color="green">Còn hiệu lực</Tag>;
-       };
+  let insuranceTag = <Tag>Chưa có thông tin</Tag>;
+  if (dataDetail?.hanTheBHYT) {
+    if (dayjs(dataDetail.hanTheBHYT).isBefore(dayjs(), "day")) {
+      insuranceTag = <Tag color="red">Đã hết hạn</Tag>;
+    } else {
+      insuranceTag = <Tag color="green">Còn hiệu lực</Tag>;
+    }
+  }
 
-       const renderStatusTag = () => {
-              if (!dataDetail?.trangThai) {
-                     return <Tag>--</Tag>;
-              }
+  let statusTag = <Tag>--</Tag>;
+  if (dataDetail?.trangThai) {
+    const color = dataDetail.trangThai === "Đang điều trị" ? "processing" : "success";
+    statusTag = <Tag color={color}>{dataDetail.trangThai}</Tag>;
+  }
 
-              const color = dataDetail.trangThai === "Đang điều trị" ? "processing" : "success";
+  if (loading) {
+    return <Skeleton active paragraph={{ rows: 10 }} />;
+  }
 
-              return <Tag color={color}>{dataDetail.trangThai}</Tag>;
-       };
+  if (!dataDetail) {
+    return <Empty description="Không có dữ liệu bệnh nhân" />;
+  }
 
-       const insuranceTag = renderInsuranceTag();
-       const statusTag = renderStatusTag();
+  return (
+    <Space direction="vertical" size={16} style={{ width: "100%", padding: 20 }}>
+      <Button icon={<ArrowLeftOutlined />} onClick={() => navigate("/dashboard/patients")}>
+        Quay lại danh sách
+      </Button>
 
-       if (loading) {
-              return <Skeleton active paragraph={{ rows: 10 }} />;
-       }
+      <Row gutter={[16, 16]}>
+        <Col xs={24} lg={8}>
+          <Card>
+            <Space direction="vertical" size={16} style={{ width: "100%", alignItems: "center" }}>
+              <Avatar src={resolveImageUrl(dataDetail.avatar)} size={120} style={{ backgroundColor: "#1677ff", fontSize: 34 }}>
+                {dataDetail.hoTen?.charAt(0).toUpperCase()}
+              </Avatar>
+              <div style={{ textAlign: "center" }}>
+                <Typography.Title level={4} style={{ marginBottom: 4 }}>
+                  {dataDetail.hoTen}
+                </Typography.Title>
+                <Typography.Text type="secondary">Mã BN: {dataDetail.id}</Typography.Text>
+              </div>
+              {statusTag}
+              <Descriptions size="small" column={1} labelStyle={{ fontWeight: 600 }} style={{ width: "100%" }}>
+                <Descriptions.Item label="Giới tính">{dataDetail.gioiTinh || "--"}</Descriptions.Item>
+                <Descriptions.Item label="Tuổi">{age}</Descriptions.Item>
+              </Descriptions>
+            </Space>
+          </Card>
+        </Col>
 
-       if (!dataDetail) {
-              return <Empty description="Không có dữ liệu bệnh nhân" />;
-       }
-
-       return (
-              <Space direction="vertical" size={16} style={{ width: "100%", padding: 20 }}>
-                     <Button icon={<ArrowLeftOutlined />} onClick={() => navigate("/dashboard/patients")}>
-                            Quay lại danh sách
-                     </Button>
-
-                     <Row gutter={[16, 16]}>
-                            <Col xs={24} lg={8}>
-                                   <Card>
-                                          <Space direction="vertical" size={16} style={{ width: "100%", alignItems: "center" }}>
-              <Avatar
-                src={resolveImageUrl(dataDetail.avatar)}
-                size={120}
-                style={{ backgroundColor: "#1677ff", fontSize: 34 }}
-              >
-                                                        {dataDetail.hoTen?.charAt(0).toUpperCase()}
-                                                 </Avatar>
-                                                 <div style={{ textAlign: "center" }}>
-                                                        <Typography.Title level={4} style={{ marginBottom: 4 }}>
-                                                               {dataDetail.hoTen}
-                                                        </Typography.Title>
-                                                        <Typography.Text type="secondary">Mã BN: {dataDetail.id}</Typography.Text>
-                                                 </div>
-                                                 {statusTag}
-                                                 <Descriptions size="small" column={1} labelStyle={{ fontWeight: 600 }} style={{ width: "100%" }}>
-                                                        <Descriptions.Item label="Giới tính">{dataDetail.gioiTinh || "--"}</Descriptions.Item>
-                                                        <Descriptions.Item label="Tuổi">{age}</Descriptions.Item>
-                                                        {/* <Descriptions.Item label="Số điện thoại">
-                  {dataDetail.soDienThoai ? (
-                    <Space size={6}>
-                      <PhoneOutlined />
-                      <span>{dataDetail.soDienThoai}</span>
-                    </Space>
-                  ) : (
-                    "--"
-                  )}
-                </Descriptions.Item> */}
-                                                 </Descriptions>
-                                          </Space>
-                                   </Card>
-                            </Col>
-
-                            <Col xs={24} lg={16}>
-                                   <Space direction="vertical" size={16} style={{ width: "100%" }}>
-                                          <Card title="Thông tin cá nhân">
-                                                 <Descriptions bordered column={1} labelStyle={{ width: 220, fontWeight: 600 }}>
-                                                        <Descriptions.Item label="Họ và tên">{dataDetail.hoTen || "--"}</Descriptions.Item>
-                                                        <Descriptions.Item label="Ngày sinh">
-                                                               {dataDetail.ngaySinh ? dayjs(dataDetail.ngaySinh).format("DD/MM/YYYY") : "--"}
-                                                        </Descriptions.Item>
-                                                        <Descriptions.Item label="Giới tính">{dataDetail.gioiTinh || "--"}</Descriptions.Item>
-                                                        <Descriptions.Item label="Địa chỉ">{dataDetail.diaChi || "--"}</Descriptions.Item>
-                                                        <Descriptions.Item label="Trạng thái điều trị">{statusTag}</Descriptions.Item>
-                                                 </Descriptions>
-                                          </Card>
-
-                                          <Card title="Thông tin bảo hiểm y tế">
-                                                 <Descriptions bordered column={1} labelStyle={{ width: 220, fontWeight: 600 }}>
-                                                        <Descriptions.Item label="Số thẻ BHYT">{dataDetail.soTheBaoHiem || "--"}</Descriptions.Item>
-                                                        <Descriptions.Item label="Mức hưởng">{insuranceRate}</Descriptions.Item>
-                                                        <Descriptions.Item label="Hạn thẻ BHYT">{insuranceExpiry}</Descriptions.Item>
-                                                        <Descriptions.Item label="Hiệu lực thẻ">{insuranceTag}</Descriptions.Item>
-                                                 </Descriptions>
-                                          </Card>
-
-                                          <Card title="Điều trị và tài chính" extra={<Tag color="gold">Đang cập nhật</Tag>}>
-                                                 <Typography.Paragraph style={{ marginBottom: 8 }}>
-                                                        Khu vực này dành cho dữ liệu nhập viện, hồ sơ bệnh án, lịch phẫu thuật và hóa đơn theo bệnh nhân.
-                                                 </Typography.Paragraph>
-                                                 <Typography.Text type="secondary">
-                                                        Gợi ý API cần ghép theo <code>benhNhanId</code>: Nhập viện, Hồ sơ bệnh án, Phẫu thuật, Hóa đơn.
-                                                 </Typography.Text>
-                                          </Card>
-                                   </Space>
-                            </Col>
-                     </Row>
-              </Space>
-       );
+        <Col xs={24} lg={16}>
+          <Tabs
+            items={[
+              {
+                key: "info",
+                label: "Thông tin cá nhân",
+                children: (
+                  <Card>
+                    <Descriptions bordered column={1} labelStyle={{ width: 220, fontWeight: 600 }}>
+                      <Descriptions.Item label="Họ và tên">{dataDetail.hoTen || "--"}</Descriptions.Item>
+                      <Descriptions.Item label="Ngày sinh">{dataDetail.ngaySinh ? dayjs(dataDetail.ngaySinh).format("DD/MM/YYYY") : "--"}</Descriptions.Item>
+                      <Descriptions.Item label="Giới tính">{dataDetail.gioiTinh || "--"}</Descriptions.Item>
+                      <Descriptions.Item label="Địa chỉ">{dataDetail.diaChi || "--"}</Descriptions.Item>
+                      <Descriptions.Item label="Trạng thái điều trị">{statusTag}</Descriptions.Item>
+                    </Descriptions>
+                  </Card>
+                ),
+              },
+              {
+                key: "insurance",
+                label: "BHYT",
+                children: (
+                  <Card>
+                    <Descriptions bordered column={1} labelStyle={{ width: 220, fontWeight: 600 }}>
+                      <Descriptions.Item label="Số thẻ BHYT">{dataDetail.soTheBaoHiem || "--"}</Descriptions.Item>
+                      <Descriptions.Item label="Mức hưởng">{insuranceRate}</Descriptions.Item>
+                      <Descriptions.Item label="Hạn thẻ BHYT">{insuranceExpiry}</Descriptions.Item>
+                      <Descriptions.Item label="Hiệu lực thẻ">{insuranceTag}</Descriptions.Item>
+                    </Descriptions>
+                  </Card>
+                ),
+              },
+              {
+                key: "admissions",
+                label: "Nhập viện",
+                children: (
+                  <Card>
+                    <TableList
+                      columns={["Lý do nhập", "Ngày nhập", "Ngày xuất", "Trạng thái"]}
+                      rows={admissions.map((item) => [
+                        item.lyDoNhap || "--",
+                        item.ngayNhap ? dayjs(item.ngayNhap).format("DD/MM/YYYY") : "--",
+                        item.ngayXuat ? dayjs(item.ngayXuat).format("DD/MM/YYYY") : "--",
+                        item.trangThai,
+                      ])}
+                    />
+                  </Card>
+                ),
+              },
+              {
+                key: "medical",
+                label: "HSBA",
+                children: (
+                  <Card>
+                    <TableList
+                      columns={["Bác sĩ", "Chẩn đoán", "Kết quả"]}
+                      rows={medicalRecords.map((item) => [
+                        item.tenBacSi || "--",
+                        item.chanDoanBanDau || "--",
+                        item.ketQuaDieuTri || "--",
+                      ])}
+                    />
+                  </Card>
+                ),
+              },
+              {
+                key: "surgery",
+                label: "Phẫu thuật",
+                children: (
+                  <Card>
+                    <TableList
+                      columns={["Loại phẫu thuật", "Ngày", "Trạng thái"]}
+                      rows={surgeries.map((item) => [
+                        item.loaiPhauThuat || "--",
+                        item.ngay ? dayjs(item.ngay).format("DD/MM/YYYY") : "--",
+                        item.trangThai || "--",
+                      ])}
+                    />
+                  </Card>
+                ),
+              },
+              {
+                key: "invoice",
+                label: "Hóa đơn",
+                children: (
+                  <Card>
+                    <TableList
+                      columns={["Ngày", "Tổng tiền", "Trạng thái"]}
+                      rows={invoices.map((item) => [
+                        item.ngay ? dayjs(item.ngay).format("DD/MM/YYYY") : "--",
+                        (item.tongTien ?? 0).toLocaleString("vi-VN") + " đ",
+                        item.trangThai,
+                      ])}
+                    />
+                  </Card>
+                ),
+              },
+            ]}
+          />
+        </Col>
+      </Row>
+    </Space>
+  );
 };
+
+const TableList = ({ columns, rows }: { columns: string[]; rows: string[][] }) => (
+  <div style={{ display: "grid", gap: 8 }}>
+    <div style={{ display: "grid", gridTemplateColumns: `repeat(${columns.length}, 1fr)`, gap: 8, fontWeight: 600 }}>
+      {columns.map((col) => (
+        <div key={col}>{col}</div>
+      ))}
+    </div>
+    {rows.length > 0 ? (
+      rows.map((row, index) => (
+        <div key={index} style={{ display: "grid", gridTemplateColumns: `repeat(${columns.length}, 1fr)`, gap: 8, padding: 8, background: "#f8fafc", borderRadius: 8 }}>
+          {row.map((cell, cellIndex) => (
+            <div key={`${index}-${cellIndex}`}>{cell}</div>
+          ))}
+        </div>
+      ))
+    ) : (
+      <Empty description="Chưa có dữ liệu" />
+    )}
+  </div>
+);
 
 export default PatientDetailPage;
