@@ -1,18 +1,24 @@
-import { ReloadOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Col, DatePicker, Input, Row, Select, Space, Table, Tag, Typography } from "antd";
+import { CheckCircleOutlined, ReloadOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Table, Tag, Typography, notification } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getAllAdmissions, searchAdmissions } from "../../services/api.admission.service";
+import { getAllAdmissions, searchAdmissions, updateAdmission } from "../../services/api.admission.service";
 import { getAllDepartments } from "../../services/api.bed-department.service";
 import type { KhoaPhong, NhapVien } from "../../types";
 import { trangThaiColor } from "../../components/admissions/EditAdmissionModal";
 
+const DISCHARGE_STATUS_OPTIONS = [
+  { label: "Đã xuất viện", value: "Đã xuất viện" },
+  { label: "Chờ xuất viện", value: "Chờ xuất viện" },
+];
+
 const DischargeListPage = () => {
-  const navigate = useNavigate();
+  const [form] = Form.useForm();
   const [admissions, setAdmissions] = useState<NhapVien[]>([]);
   const [departments, setDepartments] = useState<KhoaPhong[]>([]);
   const [loading, setLoading] = useState(false);
+  const [openDischarge, setOpenDischarge] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState<NhapVien | null>(null);
 
   const [filterName, setFilterName] = useState("");
   const [filterKhoaId, setFilterKhoaId] = useState<string | undefined>();
@@ -54,6 +60,36 @@ const DischargeListPage = () => {
 
   const dischargeRows = admissions.filter((item) => item.trangThai === "Chờ xuất viện");
 
+  const openDischargeModal = (record: NhapVien) => {
+    setSelectedRecord(record);
+    form.setFieldsValue({
+      trangThai: "Đã xuất viện",
+      ngayXuat: record.ngayXuat ? dayjs(record.ngayXuat) : dayjs(),
+    });
+    setOpenDischarge(true);
+  };
+
+  const onSaveDischarge = async (values: any) => {
+    if (!selectedRecord) return;
+    try {
+      await updateAdmission({
+        id: selectedRecord.id,
+        lyDoNhap: selectedRecord.lyDoNhap,
+        trangThai: values.trangThai,
+        ngayXuat: values.ngayXuat ? dayjs(values.ngayXuat).toISOString() : null,
+      });
+      notification.success({ message: "Chốt xuất viện thành công" });
+      setOpenDischarge(false);
+      setSelectedRecord(null);
+      await fetchAll();
+    } catch (error: any) {
+      notification.error({
+        message: "Chốt xuất viện thất bại",
+        description: error?.response?.data?.message || "Vui lòng kiểm tra lại dữ liệu",
+      });
+    }
+  };
+
   const columns = [
     { title: "Bệnh nhân", dataIndex: "tenBenhNhan", key: "tenBenhNhan" },
     { title: "Giường", dataIndex: "tenGiuong", key: "tenGiuong" },
@@ -76,6 +112,15 @@ const DischargeListPage = () => {
       dataIndex: "trangThai",
       key: "trangThai",
       render: (v: string) => <Tag color={trangThaiColor(v)}>{v}</Tag>,
+    },
+    {
+      title: "Thao tác",
+      key: "action",
+      render: (record: NhapVien) => (
+        <Button icon={<CheckCircleOutlined />} type="primary" onClick={() => openDischargeModal(record)}>
+          Chốt xuất viện
+        </Button>
+      ),
     },
   ];
 
@@ -129,10 +174,26 @@ const DischargeListPage = () => {
         columns={columns}
         scroll={{ x: 900 }}
         pagination={{ pageSize: 10, showTotal: (t) => `Tổng ${t} phiếu` }}
-        onRow={(record) => ({
-          onClick: () => navigate(`/dashboard/admissions?tab=discharge&id=${record.id}`),
-        })}
       />
+
+      <Modal
+        title="Chốt xuất viện"
+        open={openDischarge}
+        onCancel={() => setOpenDischarge(false)}
+        onOk={() => form.submit()}
+        okText="Lưu"
+        cancelText="Hủy"
+        destroyOnClose
+      >
+        <Form form={form} layout="vertical" onFinish={onSaveDischarge}>
+          <Form.Item name="trangThai" label="Trạng thái" rules={[{ required: true, message: "Vui lòng chọn trạng thái" }]}>
+            <Select options={DISCHARGE_STATUS_OPTIONS} />
+          </Form.Item>
+          <Form.Item name="ngayXuat" label="Ngày xuất viện" rules={[{ required: true, message: "Vui lòng chọn ngày xuất viện" }]}>
+            <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
+          </Form.Item>
+        </Form>
+      </Modal>
     </Space>
   );
 };
