@@ -175,7 +175,7 @@ const SurgeryListPage = () => {
     <Space direction="vertical" size={16} style={{ width: "100%", padding: 20 }}>
       <Space style={{ width: "100%", justifyContent: "space-between" }}>
         <Typography.Title level={4} style={{ margin: 0 }}>
-          Lịch phẫu thuật
+          Lịch phẫu thuật / thủ thuật
         </Typography.Title>
         <Button icon={<ReloadOutlined />} onClick={fetchAll}>
           Tải lại
@@ -207,7 +207,7 @@ const SurgeryListPage = () => {
       />
 
       <Modal
-        title={editing ? "Cập nhật lịch phẫu thuật" : "Tạo lịch phẫu thuật"}
+        title={editing ? "Cập nhật phẫu thuật / thủ thuật" : "Tạo phẫu thuật / thủ thuật"}
         open={open}
         onCancel={() => setOpen(false)}
         onOk={() => form.submit()}
@@ -228,7 +228,7 @@ const SurgeryListPage = () => {
           </Form.Item>
           <Form.Item
             name="loaiPhauThuat"
-            label="Loại phẫu thuật"
+            label="Loại phẫu thuật / thủ thuật"
             rules={[{ required: true }]}
           >
             <Input />

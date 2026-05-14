@@ -24,8 +24,8 @@ const getInvoicePreview = async (nhapVienId: string) => {
 const createInvoice = async (nhapVienId: string) =>
   axios.post("/gateway/api/HoaDon/tao-moi", { nhapVienId });
 
-const payInvoice = async (id: string) =>
-  axios.put("/gateway/api/HoaDon/thanh-toan", { id });
+const payInvoice = async (id: string, soTien: number) =>
+  axios.put("/gateway/api/HoaDon/thanh-toan", { id, soTien });
 
 const deleteInvoice = async (id: string) =>
   axios.delete(`/gateway/api/HoaDon/xoa/${id}`);

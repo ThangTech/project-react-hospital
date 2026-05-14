@@ -79,6 +79,12 @@ const InvoiceListPage = () => {
 
   const columns = [
     {
+      title: "Mã hóa đơn",
+      dataIndex: "id",
+      key: "id",
+      width: 260,
+    },
+    {
       title: "Bệnh nhân",
       dataIndex: "tenBenhNhan",
       key: "tenBenhNhan",
@@ -127,7 +133,13 @@ const InvoiceListPage = () => {
             size="small"
             icon={<DollarOutlined />}
             onClick={async () => {
-              await payInvoice(record.id);
+              const soTienConLai = Math.max((record.tongTien ?? 0) - (record.baoHiemChiTra ?? 0) - (record.benhNhanThanhToan ?? 0), 0);
+              if (soTienConLai <= 0) {
+                notification.info({ message: "Hóa đơn đã thanh toán đủ" });
+                return;
+              }
+              await payInvoice(record.id, soTienConLai);
+              notification.success({ message: "Thanh toán thành công" });
               await fetchAll();
             }}
           >

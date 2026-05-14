@@ -2,7 +2,7 @@ import { CheckCircleOutlined, ReloadOutlined, SearchOutlined } from "@ant-design
 import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Table, Tag, Typography, notification } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
-import { confirmDischarge, getAllAdmissions, searchAdmissions } from "../../services/api.admission.service";
+import { confirmDischarge, getReadyForDischarge } from "../../services/api.admission.service";
 import { getAllDepartments } from "../../services/api.bed-department.service";
 import type { KhoaPhong, NhapVien } from "../../types";
 import { trangThaiColor } from "../../components/admissions/EditAdmissionModal";
@@ -22,7 +22,7 @@ const DischargeListPage = () => {
 
   const fetchAll = async () => {
     setLoading(true);
-    const [admList, deptList] = await Promise.all([getAllAdmissions(), getAllDepartments()]);
+    const [admList, deptList] = await Promise.all([getReadyForDischarge(), getAllDepartments()]);
     setAdmissions(admList);
     setDepartments(deptList);
     setLoading(false);
@@ -34,14 +34,15 @@ const DischargeListPage = () => {
 
   const onSearch = async () => {
     setLoading(true);
-    const result = await searchAdmissions({
-      tenBenhNhan: filterName.trim() || undefined,
-      khoaId: filterKhoaId,
-      trangThai: "Chờ xuất viện",
-      tuNgay: filterTuNgay,
-      denNgay: filterDenNgay,
-    });
-    setAdmissions(result.filter((item) => item.trangThai === "Chờ xuất viện"));
+    const result = await getReadyForDischarge();
+    const keyword = filterName.trim().toLowerCase();
+    setAdmissions(result.filter((item) => {
+      if (keyword && !item.tenBenhNhan?.toLowerCase().includes(keyword)) return false;
+      if (filterKhoaId && item.khoaId !== filterKhoaId) return false;
+      if (filterTuNgay && dayjs(item.ngayNhap).isBefore(dayjs(filterTuNgay), "day")) return false;
+      if (filterDenNgay && dayjs(item.ngayNhap).isAfter(dayjs(filterDenNgay), "day")) return false;
+      return true;
+    }));
     setLoading(false);
   };
 
@@ -53,7 +54,7 @@ const DischargeListPage = () => {
     fetchAll();
   };
 
-  const dischargeRows = admissions.filter((item) => item.trangThai === "Chờ xuất viện");
+  const dischargeRows = admissions;
 
   const openDischargeModal = (record: NhapVien) => {
     setSelectedRecord(record);
