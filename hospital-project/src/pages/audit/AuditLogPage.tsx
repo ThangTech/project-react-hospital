@@ -41,12 +41,38 @@ const AuditLogPage = () => {
   };
 
   const columns = [
-    { title: "Thời gian", dataIndex: "createdAt", render: (v: string) => (v ? dayjs(v).format("DD/MM/YYYY HH:mm") : "--") },
-    { title: "Người dùng", dataIndex: "userName", render: (v: string) => v || "--" },
-    { title: "Hành động", dataIndex: "action", render: (v: string) => v || "--" },
-    { title: "Đối tượng", dataIndex: "entityName", render: (v: string) => v || "--" },
-    { title: "Chi tiết", dataIndex: "description", render: (v: string) => v || "--" },
-    { title: "Kết quả", dataIndex: "status", render: (v: string) => <Tag color={v === "Success" ? "green" : "red"}>{v || "--"}</Tag> },
+    {
+      title: "Thời gian",
+      dataIndex: "createdAt",
+      render: (v: string) => (v ? dayjs(v).format("DD/MM/YYYY HH:mm") : "--"),
+    },
+    {
+      title: "Người dùng",
+      dataIndex: "userName",
+      render: (v: string) => v || "--",
+    },
+    {
+      title: "Hành động",
+      dataIndex: "action",
+      render: (v: string) => v || "--",
+    },
+    {
+      title: "Đối tượng",
+      dataIndex: "entityName",
+      render: (v: string) => v || "--",
+    },
+    {
+      title: "Chi tiết",
+      dataIndex: "description",
+      render: (v: string) => v || "--",
+    },
+    {
+      title: "Kết quả",
+      dataIndex: "status",
+      render: (v: string) => (
+        <Tag color={v === "Success" ? "green" : "red"}>{v || "--"}</Tag>
+      ),
+    },
   ];
 
   return (
@@ -70,10 +96,58 @@ const AuditLogPage = () => {
 
       <Tabs
         items={[
-          { key: "system", label: "System logs", children: <Table rowKey={(r, i) => `${r.id ?? "system"}-${i}`} loading={loading} dataSource={systemLogs} columns={columns} pagination={{ pageSize: 10 }} /> },
-          { key: "medical", label: "HSBA logs", children: <Table rowKey={(r, i) => `${r.id ?? "medical"}-${i}`} loading={loading} dataSource={medicalLogs} columns={columns} pagination={{ pageSize: 10 }} /> },
-          { key: "user", label: "Theo user", children: <Table rowKey={(r, i) => `${r.id ?? "user"}-${i}`} loading={loading} dataSource={userLogs} columns={columns} pagination={{ pageSize: 10 }} /> },
-          { key: "date", label: "Theo ngày", children: <Table rowKey={(r, i) => `${r.id ?? "date"}-${i}`} loading={loading} dataSource={dateLogs} columns={columns} pagination={{ pageSize: 10 }} /> },
+          {
+            key: "system",
+            label: "System logs",
+            children: (
+              <Table
+                rowKey={(r, i) => `${r.id ?? "system"}-${i}`}
+                loading={loading}
+                dataSource={systemLogs}
+                columns={columns}
+                pagination={{ pageSize: 10 }}
+              />
+            ),
+          },
+          {
+            key: "medical",
+            label: "HSBA logs",
+            children: (
+              <Table
+                rowKey={(r, i) => `${r.id ?? "medical"}-${i}`}
+                loading={loading}
+                dataSource={medicalLogs}
+                columns={columns}
+                pagination={{ pageSize: 10 }}
+              />
+            ),
+          },
+          {
+            key: "user",
+            label: "Theo user",
+            children: (
+              <Table
+                rowKey={(r, i) => `${r.id ?? "user"}-${i}`}
+                loading={loading}
+                dataSource={userLogs}
+                columns={columns}
+                pagination={{ pageSize: 10 }}
+              />
+            ),
+          },
+          {
+            key: "date",
+            label: "Theo ngày",
+            children: (
+              <Table
+                rowKey={(r, i) => `${r.id ?? "date"}-${i}`}
+                loading={loading}
+                dataSource={dateLogs}
+                columns={columns}
+                pagination={{ pageSize: 10 }}
+              />
+            ),
+          },
         ]}
       />
     </div>
