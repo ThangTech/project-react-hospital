@@ -1,8 +1,8 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined, SearchOutlined, SwapOutlined } from "@ant-design/icons";
-import { Button, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Space, Table, Tag, Typography, notification } from "antd";
-import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { Button, Col, DatePicker, Form, Input, Modal, Popconfirm, Row, Select, Space, Table, Tag, Typography, notification } from "antd";
+import { useMemo, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import dayjs from "dayjs";
 import type { BenhNhan, GiuongBenh, KhoaPhong, NhapVien } from "../../types";
 import {
   createAdmission,
@@ -14,12 +14,8 @@ import {
 } from "../../services/api.admission.service";
 import { getAllBeds, getAllDepartments } from "../../services/api.bed-department.service";
 import { getAllPatients } from "../../services/api.patient.service";
-import {
-  TRANG_THAI_OPTIONS,
-  trangThaiColor,
-} from "../../components/admissions/EditAdmissionModal";
 import CreateAdmissionModal from "../../components/admissions/CreateAdmissionModal";
-import EditAdmissionModal from "../../components/admissions/EditAdmissionModal";
+import EditAdmissionModal, { TRANG_THAI_OPTIONS, trangThaiColor } from "../../components/admissions/EditAdmissionModal";
 import TransferBedModal from "../../components/admissions/TransferBedModal";
 
 const AdmissionListPage = () => {
@@ -104,6 +100,15 @@ const AdmissionListPage = () => {
   };
 
   const onSaveCreate = async (values: any) => {
+    const activeAdmission = activeAdmissionsByPatient.get(values.benhNhanId);
+    if (activeAdmission) {
+      notification.warning({
+        message: "Bệnh nhân đang điều trị",
+        description: `BN này đã có phiếu nhập viện ${activeAdmission.tenGiuong ? `ở giường ${activeAdmission.tenGiuong}` : "đang hoạt động"}.`,
+      });
+      return;
+    }
+
     try {
       await createAdmission({
         benhNhanId: values.benhNhanId,
@@ -212,8 +217,15 @@ const AdmissionListPage = () => {
 
 
   const availableBeds = beds.filter((b) => b.trangThai === "Trống");
-
-  
+  const activeAdmissionsByPatient = useMemo(() => {
+    const map = new Map<string, NhapVien>();
+    admissions.forEach((item) => {
+      if (item.trangThai === "Đang điều trị") {
+        map.set(item.benhNhanId, item);
+      }
+    });
+    return map;
+  }, [admissions]);
   const dischargeRows = admissions.filter((item) => item.trangThai === "Chờ xuất viện");
 
   const columns = [
@@ -431,6 +443,57 @@ const AdmissionListPage = () => {
         onCancel={() => setOpenCreateModal(false)}
         onFinish={onSaveCreate}
       />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
       <EditAdmissionModal
