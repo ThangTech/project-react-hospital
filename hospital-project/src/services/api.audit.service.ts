@@ -1,6 +1,11 @@
 import axios from "./axios.interceptor";
 
-const normalizePaged = (data: any) => data?.data?.data ?? data?.data ?? data ?? [];
+const normalizePaged = (data: any) => {
+  if (Array.isArray(data?.data?.data)) return data.data.data;
+  if (Array.isArray(data?.data)) return data.data;
+  if (Array.isArray(data)) return data;
+  return [];
+};
 
 const getSystemLogs = async () => {
   try {

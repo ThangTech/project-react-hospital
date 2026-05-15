@@ -65,6 +65,12 @@ const AuditLogPage = () => {
 
   const medicalColumns = [
     {
+      title: "Hồ sơ bệnh án ID",
+      dataIndex: "hoSoBenhAnId",
+      width: 260,
+      render: (v: string) => v || "--",
+    },
+    {
       title: "Thời gian",
       dataIndex: "thoiGianSua",
       render: (v: string) => (v ? dayjs(v).format("DD/MM/YYYY HH:mm") : "--"),

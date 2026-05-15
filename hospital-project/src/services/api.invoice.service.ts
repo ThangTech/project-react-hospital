@@ -1,10 +1,16 @@
 import axios from "./axios.interceptor";
 import type { HoaDon } from "../types";
 
+const toArray = (data: any) => {
+  if (Array.isArray(data?.data)) return data.data;
+  if (Array.isArray(data)) return data;
+  return [];
+};
+
 const getAllInvoices = async (): Promise<HoaDon[]> => {
   try {
     const res = await axios.get("/gateway/api/HoaDon/lay-tat-ca");
-    return res.data?.data ?? res.data ?? [];
+    return toArray(res.data);
   } catch (error) {
     console.log(error);
     return [];

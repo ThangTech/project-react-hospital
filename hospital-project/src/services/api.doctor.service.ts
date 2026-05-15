@@ -1,13 +1,18 @@
 import axios from "./axios.interceptor";
 import type { BacSi } from "../types";
 
+const toArray = (data: any) => {
+  if (Array.isArray(data?.data)) return data.data;
+  if (Array.isArray(data)) return data;
+  return [];
+};
+
 // GET /gateway/api/bacsi/doctors
 // Response: { success, data: BacSi[], message }
 const getAllDoctors = async (): Promise<BacSi[]> => {
   try {
     const res = await axios.get("/gateway/api/bacsi/doctors");
-    // Backend trả về ApiResponse<IEnumerable<DoctorDto>>
-    return res.data?.data ?? res.data ?? [];
+    return toArray(res.data);
   } catch (error) {
     console.log(error);
     return [];

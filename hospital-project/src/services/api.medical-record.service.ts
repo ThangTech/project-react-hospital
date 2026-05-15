@@ -35,9 +35,13 @@ const searchMedicalRecords = async (params: {
   // Interceptor đã unwrap ApiResponse → res = { success, data: PagedResult, message }
   // res.data = PagedResult = { data: [...], pageNumber, ... }
   // res.data.data = mảng hồ sơ bệnh án
-  const pagedResult = res.data ?? res; // fallback nếu chưa unwrap
-  const items = pagedResult?.data ?? pagedResult?.Data ?? [];
-  return Array.isArray(items) ? items : [];
+  let pagedResult = res.data;
+  if (!pagedResult) pagedResult = res;
+
+  if (Array.isArray(pagedResult?.data)) return pagedResult.data;
+  if (Array.isArray(pagedResult?.Data)) return pagedResult.Data;
+  if (Array.isArray(pagedResult)) return pagedResult;
+  return [];
 };
 
 const createMedicalRecord = async (data: {

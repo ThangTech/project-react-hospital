@@ -1,6 +1,12 @@
 import axios from "./axios.interceptor";
 import type { LichPhauThuat } from "../types";
 
+const toArray = (data: any) => {
+  if (Array.isArray(data?.data)) return data.data;
+  if (Array.isArray(data)) return data;
+  return [];
+};
+
 type SurgeryPayload = {
   nhapVienId: string;
   bacSiChinhId: string;
@@ -15,7 +21,7 @@ type SurgeryPayload = {
 const getAllSurgeries = async (): Promise<LichPhauThuat[]> => {
   try {
     const res = await axios.get("/gateway/api/Surgery/get-all-surgery");
-    return res.data?.data ?? res.data ?? [];
+    return toArray(res.data);
   } catch (error) {
     console.log(error);
     return [];
@@ -25,7 +31,7 @@ const getAllSurgeries = async (): Promise<LichPhauThuat[]> => {
 const searchSurgeries = async (keyword: string): Promise<LichPhauThuat[]> => {
   try {
     const res = await axios.post("/gateway/api/Surgery/search", { searchTerm: keyword });
-    return res.data?.data ?? res.data ?? [];
+    return toArray(res.data);
   } catch (error) {
     console.log(error);
     return [];

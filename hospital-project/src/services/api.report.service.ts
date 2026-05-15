@@ -1,9 +1,15 @@
 import axios from "./axios.interceptor";
 
+const unwrapData = (data: any) => {
+  if (data?.data) return data.data;
+  if (data) return data;
+  return null;
+};
+
 const getBedCapacityReport = async (params?: { tuNgay?: string; denNgay?: string; khoaId?: string }) => {
   try {
     const res = await axios.post("/gateway/api/Report/bed-capacity", params ?? {});
-    return res.data?.data ?? res.data ?? null;
+    return unwrapData(res.data);
   } catch (error) {
     console.log(error);
     return null;
@@ -13,7 +19,7 @@ const getBedCapacityReport = async (params?: { tuNgay?: string; denNgay?: string
 const getTreatmentCostReport = async (params?: { tuNgay?: string; denNgay?: string; khoaId?: string }) => {
   try {
     const res = await axios.post("/gateway/api/Report/treatment-cost", params ?? {});
-    return res.data?.data ?? res.data ?? null;
+    return unwrapData(res.data);
   } catch (error) {
     console.log(error);
     return null;

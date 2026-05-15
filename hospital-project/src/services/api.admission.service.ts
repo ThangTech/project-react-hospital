@@ -1,10 +1,16 @@
 import axios from "./axios.interceptor";
 import type { NhapVien } from "../types";
 
+const toArray = (data: any) => {
+  if (Array.isArray(data?.data)) return data.data;
+  if (Array.isArray(data)) return data;
+  return [];
+};
+
 const getAllAdmissions = async (): Promise<NhapVien[]> => {
   try {
     const res = await axios.get("/gateway/api/nhapvien/danh-sach");
-    return res.data;
+    return toArray(res.data);
   } catch (error) {
     console.log(error);
     return [];
@@ -52,7 +58,7 @@ const confirmDischarge = async (data: {
 const getReadyForDischarge = async (): Promise<NhapVien[]> => {
   try {
     const res = await axios.get("/gateway/api/XuatVien/danh-sach-cho");
-    const rows = res.data ?? [];
+    const rows = toArray(res.data);
     return rows.map((item: any) => ({
       id: item.nhapVienId,
       benhNhanId: item.benhNhanId ?? "",
@@ -93,7 +99,7 @@ const searchAdmissions = async (params: {
 }): Promise<NhapVien[]> => {
   try {
     const res = await axios.post("/gateway/api/nhapvien/tim-kiem", params);
-    return res.data;
+    return toArray(res.data);
   } catch (error) {
     console.log(error);
     return [];
