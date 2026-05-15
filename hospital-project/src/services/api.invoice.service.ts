@@ -21,8 +21,12 @@ const getInvoicePreview = async (nhapVienId: string) => {
   }
 };
 
-const createInvoice = async (nhapVienId: string) =>
-  axios.post("/gateway/api/HoaDon/tao-moi", { nhapVienId });
+const createInvoice = async (data: {
+  benhNhanId: string;
+  nhapVienId: string;
+  tongTien: number;
+  baoHiemChiTra: number;
+}) => axios.post("/gateway/api/HoaDon/tao-moi", data);
 
 const payInvoice = async (id: string, soTien: number) =>
   axios.put("/gateway/api/HoaDon/thanh-toan", { id, soTien });

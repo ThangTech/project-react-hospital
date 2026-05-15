@@ -76,7 +76,13 @@ const InvoiceListPage = () => {
   const onSubmit = async () => {
     try {
       const values = await form.validateFields();
-      await createInvoice(values.nhapVienId);
+      const data = preview ?? await getInvoicePreview(values.nhapVienId);
+      await createInvoice({
+        benhNhanId: data.benhNhanId,
+        nhapVienId: values.nhapVienId,
+        tongTien: data.tongTienGoiY,
+        baoHiemChiTra: data.baoHiemChiTraGoiY,
+      });
       notification.success({ message: "Tạo hóa đơn thành công" });
       setOpen(false);
       await fetchAll();
@@ -144,6 +150,7 @@ const InvoiceListPage = () => {
           <Button
             size="small"
             icon={<DollarOutlined />}
+            disabled={record.trangThai === "Đã thanh toán"}
             onClick={async () => {
               const soTienConLai = Math.max((record.tongTien ?? 0) - (record.baoHiemChiTra ?? 0) - (record.benhNhanThanhToan ?? 0), 0);
               if (soTienConLai <= 0) {
@@ -276,13 +283,22 @@ const InvoiceListPage = () => {
             <div style={{ background: "#fafafa", padding: 12, borderRadius: 8 }}>
               <div>Bệnh nhân: {preview.tenBenhNhan ?? "--"}</div>
               <div>
-                Tổng tiền: {(preview.tongTien ?? 0).toLocaleString("vi-VN")} đ
+                Tiền giường: {(preview.tienGiuong ?? 0).toLocaleString("vi-VN")} đ
               </div>
               <div>
-                BHYT chi trả: {(preview.baoHiemChiTra ?? 0).toLocaleString("vi-VN")} đ
+                Chi phí phẫu thuật/thủ thuật: {(preview.chiPhiPhauThuat ?? 0).toLocaleString("vi-VN")} đ
               </div>
               <div>
-                Bệnh nhân thanh toán: {(preview.benhNhanThanhToan ?? 0).toLocaleString("vi-VN")} đ
+                Chi phí xét nghiệm: {(preview.chiPhiXetNghiem ?? 0).toLocaleString("vi-VN")} đ
+              </div>
+              <div>
+                Tổng tiền: {(preview.tongTienGoiY ?? 0).toLocaleString("vi-VN")} đ
+              </div>
+              <div>
+                BHYT chi trả: {(preview.baoHiemChiTraGoiY ?? 0).toLocaleString("vi-VN")} đ
+              </div>
+              <div>
+                Bệnh nhân thanh toán: {(preview.benhNhanPhaiTraGoiY ?? 0).toLocaleString("vi-VN")} đ
               </div>
             </div>
           ) : null}
