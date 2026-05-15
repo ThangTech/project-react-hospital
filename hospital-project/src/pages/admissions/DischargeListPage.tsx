@@ -116,7 +116,12 @@ const DischargeListPage = () => {
       title: "Thao tác",
       key: "action",
       render: (record: NhapVien) => (
-        <Button icon={<CheckCircleOutlined />} type="primary" onClick={() => openDischargeModal(record)}>
+        <Button
+          icon={<CheckCircleOutlined />}
+          type="primary"
+          disabled={record.trangThai === "Đang điều trị"}
+          onClick={() => openDischargeModal(record)}
+        >
           Chốt xuất viện
         </Button>
       ),
