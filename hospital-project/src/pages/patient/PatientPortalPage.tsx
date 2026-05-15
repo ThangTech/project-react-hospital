@@ -20,10 +20,11 @@ const PatientPortalPage = () => {
   const [loading, setLoading] = useState(false);
 
   const loadData = async () => {
-    if (!user?.id) return;
+    const benhNhanId = user?.benhNhanId;
+    if (!benhNhanId) return;
     setLoading(true);
     const [patientRes, admissionList, recordList, invoiceList] = await Promise.all([
-      getPatientById(user.id),
+      getPatientById(benhNhanId),
       getAllAdmissions(),
       getAllMedicalRecords(),
       getAllInvoices(),
@@ -35,15 +36,15 @@ const PatientPortalPage = () => {
       setPatient(null);
     }
 
-    setAdmissions(admissionList.filter((item) => item.benhNhanId === user.id));
-    setRecords(recordList.filter((item) => item.benhNhanId === user.id));
-    setInvoices(invoiceList.filter((item) => item.benhNhanId === user.id));
+    setAdmissions(admissionList.filter((item) => item.benhNhanId === benhNhanId));
+    setRecords(recordList.filter((item) => item.benhNhanId === benhNhanId));
+    setInvoices(invoiceList.filter((item) => item.benhNhanId === benhNhanId));
     setLoading(false);
   };
 
   useEffect(() => {
     void loadData();
-  }, [user?.id]);
+  }, [user?.benhNhanId]);
 
   const admissionColumns = [
     { title: "Lý do nhập", dataIndex: "lyDoNhap", key: "lyDoNhap" },

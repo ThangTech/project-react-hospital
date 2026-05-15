@@ -10,6 +10,7 @@ type RegisterPayload = {
   MatKhau: string;
   Email: string;
   VaiTro: string;
+  BenhNhanId?: string | null;
 };
 
 type ChangePasswordPayload = {

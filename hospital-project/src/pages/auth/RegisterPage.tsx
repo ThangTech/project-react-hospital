@@ -21,6 +21,7 @@ const RegisterPage = () => {
         Email: values.Email,
         VaiTro: values.VaiTro,
         MatKhau: values.MatKhau,
+        BenhNhanId: values.VaiTro === "BenhNhan" ? values.BenhNhanId : null,
       });
       message.success("Đăng ký thành công");
       navigate("/login");
@@ -68,6 +69,16 @@ const RegisterPage = () => {
 
         <Form.Item name="VaiTro" label="Vai trò" rules={[{ required: true, message: "Vui lòng chọn vai trò" }]}>
           <Select placeholder="Chọn vai trò" options={ROLES} />
+        </Form.Item>
+
+        <Form.Item noStyle shouldUpdate={(prev, cur) => prev.VaiTro !== cur.VaiTro}>
+          {({ getFieldValue }) =>
+            getFieldValue("VaiTro") === "BenhNhan" ? (
+              <Form.Item name="BenhNhanId" label="Mã bệnh nhân" rules={[{ required: true, message: "Vui lòng nhập mã bệnh nhân" }]}>
+                <Input placeholder="Nhập ID bệnh nhân" />
+              </Form.Item>
+            ) : null
+          }
         </Form.Item>
 
         <Form.Item name="MatKhau" label="Mật khẩu" rules={[{ required: true, message: "Vui lòng nhập mật khẩu" }, { min: 6, message: "Tối thiểu 6 ký tự" }]}>

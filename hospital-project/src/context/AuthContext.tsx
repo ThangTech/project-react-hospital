@@ -16,6 +16,7 @@ export type AuthUser = {
     tenDangNhap: string;
     vaiTro: UserRole;
     email: string | null;
+    benhNhanId?: string | null;
 };
 
 type AuthState = {
