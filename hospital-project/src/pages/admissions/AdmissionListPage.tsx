@@ -239,6 +239,12 @@ const AdmissionListPage = () => {
 
   const columns = [
     {
+      title: "Mã nhập viện",
+      dataIndex: "id",
+      key: "id",
+      width: 260,
+    },
+    {
       title: "Bệnh nhân",
       dataIndex: "tenBenhNhan",
       key: "tenBenhNhan",
