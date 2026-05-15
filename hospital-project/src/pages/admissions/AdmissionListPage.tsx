@@ -226,7 +226,19 @@ const AdmissionListPage = () => {
     });
     return map;
   }, [admissions]);
-  const dischargeRows = admissions.filter((item) => item.trangThai === "Chờ xuất viện");
+  const getStatusOrder = (status: string) => {
+    if (status === "Đang điều trị") return 1;
+    if (status === "Chờ xuất viện") return 2;
+    if (status === "Đã xuất viện") return 3;
+    return 99;
+  };
+
+  const sortedAdmissions = [...admissions].sort((a, b) => {
+    const statusDiff = getStatusOrder(a.trangThai) - getStatusOrder(b.trangThai);
+    if (statusDiff !== 0) return statusDiff;
+    return dayjs(b.ngayNhap).valueOf() - dayjs(a.ngayNhap).valueOf();
+  });
+  const dischargeRows = sortedAdmissions.filter((item) => item.trangThai === "Chờ xuất viện");
 
   const columns = [
     {
@@ -411,7 +423,7 @@ const AdmissionListPage = () => {
         <Table
           rowKey="id"
           loading={loading}
-          dataSource={admissions}
+          dataSource={sortedAdmissions}
           columns={columns}
           scroll={{ x: 900 }}
           pagination={{
