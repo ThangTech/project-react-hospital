@@ -63,8 +63,8 @@ const getReadyForDischarge = async (): Promise<NhapVien[]> => {
       tenKhoa: item.tenKhoa,
       lyDoNhap: item.lyDoNhap ?? "--",
       ngayNhap: item.ngayNhap,
-      ngayXuat: null,
-      trangThai: "Chờ xuất viện",
+      ngayXuat: item.ngayXuat ?? null,
+      trangThai: item.trangThai ?? item.trangThaiNhapVien ?? "--",
     }));
   } catch (error) {
     console.log(error);
