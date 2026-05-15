@@ -34,7 +34,15 @@ const ReportPage = () => {
     return params;
   };
 
-  const normalizeRows = (data: any) => {
+  const normalizeBedRows = (data: any) => {
+    if (Array.isArray(data?.departmentStats)) return data.departmentStats;
+    if (Array.isArray(data?.items)) return data.items;
+    if (Array.isArray(data)) return data;
+    return [];
+  };
+
+  const normalizeCostRows = (data: any) => {
+    if (Array.isArray(data?.chiPhiTheoKhoa)) return data.chiPhiTheoKhoa;
     if (Array.isArray(data?.items)) return data.items;
     if (Array.isArray(data)) return data;
     return [];
@@ -47,8 +55,8 @@ const ReportPage = () => {
       getBedCapacityReport(params),
       getTreatmentCostReport(params),
     ]);
-    setBedRows(normalizeRows(bed));
-    setCostRows(normalizeRows(cost));
+    setBedRows(normalizeBedRows(bed));
+    setCostRows(normalizeCostRows(cost));
     setLoading(false);
   };
 
@@ -141,7 +149,7 @@ const ReportPage = () => {
                     { title: "Giường dùng", dataIndex: "giuongDangDung" },
                     {
                       title: "Tỷ lệ",
-                      dataIndex: "tyLe",
+                      dataIndex: "tyLeSuDung",
                       render: (v: number) => `${Number(v ?? 0).toFixed(0)}%`,
                     },
                   ]}
@@ -166,22 +174,28 @@ const ReportPage = () => {
                   dataSource={costRows}
                   columns={[
                     { title: "Khoa", dataIndex: "tenKhoa" },
-                    { title: "Bệnh nhân", dataIndex: "tenBenhNhan" },
+                    { title: "Lượt điều trị", dataIndex: "soLuotDieuTri" },
                     {
-                      title: "Tổng chi phí",
-                      dataIndex: "tongChiPhi",
+                      title: "Dịch vụ/giường",
+                      dataIndex: "tongChiPhiDichVu",
                       render: (v: number) =>
                         (v ?? 0).toLocaleString("vi-VN") + " đ",
                     },
                     {
-                      title: "BHYT",
-                      dataIndex: "baoHiem",
+                      title: "Phẫu thuật/thủ thuật",
+                      dataIndex: "tongChiPhiPhauThuat",
                       render: (v: number) =>
                         (v ?? 0).toLocaleString("vi-VN") + " đ",
                     },
                     {
-                      title: "Bệnh nhân trả",
-                      dataIndex: "benhNhanTra",
+                      title: "Xét nghiệm",
+                      dataIndex: "tongChiPhiXetNghiem",
+                      render: (v: number) =>
+                        (v ?? 0).toLocaleString("vi-VN") + " đ",
+                    },
+                    {
+                      title: "Tổng cộng",
+                      dataIndex: "tongCong",
                       render: (v: number) =>
                         (v ?? 0).toLocaleString("vi-VN") + " đ",
                     },

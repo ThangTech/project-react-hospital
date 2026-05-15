@@ -40,38 +40,54 @@ const AuditLogPage = () => {
     setLoading(false);
   };
 
-  const columns = [
+  const systemColumns = [
     {
       title: "Thời gian",
-      dataIndex: "createdAt",
+      dataIndex: "thoiGian",
       render: (v: string) => (v ? dayjs(v).format("DD/MM/YYYY HH:mm") : "--"),
     },
     {
       title: "Người dùng",
-      dataIndex: "userName",
+      dataIndex: "tenNguoiDung",
       render: (v: string) => v || "--",
     },
     {
       title: "Hành động",
-      dataIndex: "action",
+      dataIndex: "hanhDong",
+      render: (v: string) => <Tag color="blue">{v || "--"}</Tag>,
+    },
+    {
+      title: "Mô tả",
+      dataIndex: "moTa",
+      render: (v: string) => v || "--",
+    },
+  ];
+
+  const medicalColumns = [
+    {
+      title: "Thời gian",
+      dataIndex: "thoiGianSua",
+      render: (v: string) => (v ? dayjs(v).format("DD/MM/YYYY HH:mm") : "--"),
+    },
+    {
+      title: "Người sửa",
+      dataIndex: "tenNguoiSua",
       render: (v: string) => v || "--",
     },
     {
-      title: "Đối tượng",
-      dataIndex: "entityName",
+      title: "Hành động",
+      dataIndex: "hanhDong",
+      render: (v: string) => <Tag color="blue">{v || "--"}</Tag>,
+    },
+    {
+      title: "Chẩn đoán cũ",
+      dataIndex: "chanDoanCu",
       render: (v: string) => v || "--",
     },
     {
-      title: "Chi tiết",
-      dataIndex: "description",
+      title: "Kết quả cũ",
+      dataIndex: "ketQuaCu",
       render: (v: string) => v || "--",
-    },
-    {
-      title: "Kết quả",
-      dataIndex: "status",
-      render: (v: string) => (
-        <Tag color={v === "Success" ? "green" : "red"}>{v || "--"}</Tag>
-      ),
     },
   ];
 
@@ -104,7 +120,7 @@ const AuditLogPage = () => {
                 rowKey={(r, i) => `${r.id ?? "system"}-${i}`}
                 loading={loading}
                 dataSource={systemLogs}
-                columns={columns}
+                columns={systemColumns}
                 pagination={{ pageSize: 10 }}
               />
             ),
@@ -117,7 +133,7 @@ const AuditLogPage = () => {
                 rowKey={(r, i) => `${r.id ?? "medical"}-${i}`}
                 loading={loading}
                 dataSource={medicalLogs}
-                columns={columns}
+                columns={medicalColumns}
                 pagination={{ pageSize: 10 }}
               />
             ),
@@ -130,7 +146,7 @@ const AuditLogPage = () => {
                 rowKey={(r, i) => `${r.id ?? "user"}-${i}`}
                 loading={loading}
                 dataSource={userLogs}
-                columns={columns}
+                columns={systemColumns}
                 pagination={{ pageSize: 10 }}
               />
             ),
@@ -143,7 +159,7 @@ const AuditLogPage = () => {
                 rowKey={(r, i) => `${r.id ?? "date"}-${i}`}
                 loading={loading}
                 dataSource={dateLogs}
-                columns={columns}
+                columns={systemColumns}
                 pagination={{ pageSize: 10 }}
               />
             ),

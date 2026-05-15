@@ -1,6 +1,6 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined, SearchOutlined, SwapOutlined } from "@ant-design/icons";
-import { Button, Col, DatePicker, Form, Input, Modal, Popconfirm, Row, Select, Space, Table, Tag, Typography, notification } from "antd";
-import { useMemo, useEffect, useState } from "react";
+import { Button, Col, DatePicker, Form, Input, Popconfirm, Row, Select, Space, Table, Tag, Typography, notification } from "antd";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import dayjs from "dayjs";
 import type { BenhNhan, GiuongBenh, KhoaPhong, NhapVien } from "../../types";
@@ -217,15 +217,12 @@ const AdmissionListPage = () => {
 
 
   const availableBeds = beds.filter((b) => b.trangThai === "Trống");
-  const activeAdmissionsByPatient = useMemo(() => {
-    const map = new Map<string, NhapVien>();
-    admissions.forEach((item) => {
-      if (item.trangThai === "Đang điều trị") {
-        map.set(item.benhNhanId, item);
-      }
-    });
-    return map;
-  }, [admissions]);
+  const activeAdmissionsByPatient = new Map<string, NhapVien>();
+  admissions.forEach((item) => {
+    if (item.trangThai === "Đang điều trị") {
+      activeAdmissionsByPatient.set(item.benhNhanId, item);
+    }
+  });
   const getStatusOrder = (status: string) => {
     if (status === "Đang điều trị") return 1;
     if (status === "Chờ xuất viện") return 2;

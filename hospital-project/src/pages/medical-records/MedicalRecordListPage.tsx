@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, EyeOutlined, FilePdfOutlined } from "@ant-design/icons";
 import { Button, Form, Popconfirm, Space, Table, Tag, notification } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -9,7 +9,7 @@ import MedicalRecordFilters from "../../components/medical-records/medical-recor
 import MedicalRecordListHeader from "../../components/medical-records/medical-record-list-page/MedicalRecordListHeader";
 import { getAllAdmissions } from "../../services/api.admission.service";
 import { getAllDoctors } from "../../services/api.doctor.service";
-import { createMedicalRecord, deleteMedicalRecord, getAllMedicalRecords, searchMedicalRecords, updateMedicalRecord } from "../../services/api.medical-record.service";
+import { createMedicalRecord, deleteMedicalRecord, exportMedicalRecordPdf, getAllMedicalRecords, searchMedicalRecords, updateMedicalRecord } from "../../services/api.medical-record.service";
 import type { BacSi, HoSoBenhAn, NhapVien } from "../../types";
 
 const ketQuaColor = (kq: string | null): string => {
@@ -146,6 +146,20 @@ const MedicalRecordListPage = () => {
     setOpenDetail(true);
   };
 
+  const onExportPdf = async (record: HoSoBenhAn) => {
+    try {
+      const res = await exportMedicalRecordPdf(record.id);
+      const blob = new Blob([res.data], { type: "application/pdf" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `HoSoBenhAn_${record.id}.pdf`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    } catch (error: any) {
+      notification.error({ message: "Export PDF thất bại", description: error?.response?.data?.message || "Vui lòng kiểm tra lại" });
+    }
+  };
+
   const getTenBacSi = (id: string) => {
     const bs = doctors.find((d) => d.id === id);
     return bs ? bs.hoTen : id;
@@ -220,6 +234,7 @@ const MedicalRecordListPage = () => {
       render: (record: HoSoBenhAn) => (
         <Space>
           <Button icon={<EyeOutlined />} size="small" onClick={() => onOpenDetail(record)} title="Xem chi tiết" />
+          <Button icon={<FilePdfOutlined />} size="small" onClick={() => void onExportPdf(record)} title="Export PDF" />
           <Button icon={<EditOutlined />} size="small" onClick={() => onOpenEdit(record)} title="Cập nhật" />
           <Popconfirm title="Xóa hồ sơ bệnh án này?" okText="Xóa" cancelText="Hủy" onConfirm={() => onDelete(record.id)}>
             <Button danger icon={<DeleteOutlined />} size="small" />

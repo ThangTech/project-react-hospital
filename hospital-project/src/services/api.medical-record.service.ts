@@ -77,10 +77,15 @@ const deleteMedicalRecord = async (id: string) => {
   return axios.delete(`/gateway/api/medicalrecord/${id}`);
 };
 
+const exportMedicalRecordPdf = async (id: string) => {
+  return axios.get(`/gateway/api/medicalrecord/export-pdf/${id}`, { responseType: "blob" });
+};
+
 export {
   getAllMedicalRecords,
   searchMedicalRecords,
   createMedicalRecord,
   updateMedicalRecord,
   deleteMedicalRecord,
+  exportMedicalRecordPdf,
 };
