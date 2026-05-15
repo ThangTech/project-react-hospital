@@ -5,6 +5,13 @@ type LoginPayload = {
   MatKhau: string;
 };
 
+type RegisterPayload = {
+  TenDangNhap: string;
+  MatKhau: string;
+  Email: string;
+  VaiTro: string;
+};
+
 type ChangePasswordPayload = {
   MatKhauCu: string;
   MatKhauMoi: string;
@@ -26,6 +33,12 @@ type ResetPasswordPayload = {
 
 const loginAccount = async (data: LoginPayload) => {
   const url = "/gateway/api/Auth/login";
+  const res = await axios.post(url, data);
+  return res;
+};
+
+const registerAccount = async (data: RegisterPayload) => {
+  const url = "/gateway/api/Auth/register";
   const res = await axios.post(url, data);
   return res;
 };
@@ -60,7 +73,7 @@ const resetPassword = async (data: ResetPasswordPayload) => {
   return res;
 };
 
-export { changePassword, forgotPassword, getAccount, loginAccount, resetPassword, verifyResetOtp };
+export { changePassword, forgotPassword, getAccount, loginAccount, registerAccount, resetPassword, verifyResetOtp };
 // export const authService = {
 //   login: (payload: LoginPayload) =>
 //     axios.post(`${BASE_URL}/login`, payload),

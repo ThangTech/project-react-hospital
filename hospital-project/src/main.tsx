@@ -74,7 +74,7 @@ const router = createBrowserRouter([
   // ═══ Admin layout (AdminNavbar, không Footer) ═══
   {
     element: (
-      <ProtectedRoute allowedRoles={["Admin", "BacSi", "YTa", "KeToan"]}>
+      <ProtectedRoute allowedRoles={["Admin", "BacSi", "YTa", "KeToan", "BenhNhan"]}>
         <AdminLayout />
       </ProtectedRoute>
     ),

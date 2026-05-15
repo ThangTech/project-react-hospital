@@ -1,6 +1,7 @@
-import { Link } from "react-router-dom";
-import { Button, Form, Input, Select } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { Button, Form, Input, Select, message } from "antd";
 import backgroundImg from "../../assets/background.jpg";
+import { registerAccount } from "../../services/api.auth.service";
 
 const ROLES = [
   { value: "BenhNhan", label: "Bệnh nhân" },
@@ -10,7 +11,25 @@ const ROLES = [
   { value: "Admin", label: "Quản trị viên" },
 ];
 
-const RegisterPage = () => (
+const RegisterPage = () => {
+  const navigate = useNavigate();
+
+  const onFinish = async (values: any) => {
+    try {
+      await registerAccount({
+        TenDangNhap: values.TenDangNhap,
+        Email: values.Email,
+        VaiTro: values.VaiTro,
+        MatKhau: values.MatKhau,
+      });
+      message.success("Đăng ký thành công");
+      navigate("/login");
+    } catch (error: any) {
+      message.error(error?.response?.data?.message || "Đăng ký thất bại");
+    }
+  };
+
+  return (
   <div className="flex w-full min-h-screen">
     <div
       className="hidden md:flex flex-1 flex-col justify-end p-10 relative"
@@ -31,7 +50,7 @@ const RegisterPage = () => (
       <h2 className="text-xl font-medium text-gray-800 mb-1">Tạo tài khoản</h2>
       <p className="text-sm text-gray-400 mb-6">Điền đầy đủ thông tin để đăng ký</p>
 
-      <Form layout="vertical" requiredMark={false}>
+      <Form layout="vertical" requiredMark={false} onFinish={onFinish}>
         <Form.Item name="TenDangNhap" label="Tên đăng nhập" rules={[{ required: true, message: "Vui lòng nhập tên đăng nhập" }]}>
           <Input placeholder="vd: nguyen_van_a" />
         </Form.Item>
@@ -84,6 +103,7 @@ const RegisterPage = () => (
       </Form>
     </div>
   </div>
-);
+  );
+};
 
 export default RegisterPage;
