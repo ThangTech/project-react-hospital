@@ -1,9 +1,4 @@
 
-## Live Demo
-Bản deploy chính thức của dự án:
- **[https://project-react-hospital.vercel.app/](https://project-react-hospital.vercel.app)**
-
----
 
 ## Technology
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
