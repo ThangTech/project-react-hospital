@@ -2,6 +2,7 @@ import { DeleteOutlined, DollarOutlined, FilePdfOutlined, PlusOutlined, ReloadOu
 import { Button, Form, Input, Modal, Popconfirm, Select, Space, Table, Tag, Typography, notification } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import type { HoaDon, NhapVien } from "../../types";
 import {
   createInvoice,
@@ -21,6 +22,7 @@ const statusColor = (value: string) => {
 };
 
 const InvoiceListPage = () => {
+  const [searchParams] = useSearchParams();
   const [items, setItems] = useState<HoaDon[]>([]);
   const [admissions, setAdmissions] = useState<NhapVien[]>([]);
   const [loading, setLoading] = useState(false);
@@ -60,6 +62,16 @@ const InvoiceListPage = () => {
     const data = await getInvoicePreview(id);
     setPreview(data);
   };
+
+  useEffect(() => {
+    const nhapVienId = searchParams.get("nhapVienId");
+    if (!nhapVienId) return;
+
+    form.setFieldsValue({ nhapVienId });
+    setSelectedAdmissionId(nhapVienId);
+    setOpen(true);
+    void onPreview(nhapVienId);
+  }, [searchParams]);
 
   const onSubmit = async () => {
     try {

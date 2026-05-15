@@ -2,6 +2,7 @@ import { CheckCircleOutlined, ReloadOutlined, SearchOutlined } from "@ant-design
 import { Button, Col, DatePicker, Form, Input, Modal, Row, Select, Space, Table, Tag, Typography, notification } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { confirmDischarge, getReadyForDischarge } from "../../services/api.admission.service";
 import { getAllDepartments } from "../../services/api.bed-department.service";
 import type { KhoaPhong, NhapVien } from "../../types";
@@ -9,6 +10,7 @@ import { trangThaiColor } from "../../components/admissions/EditAdmissionModal";
 
 const DischargeListPage = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
   const [admissions, setAdmissions] = useState<NhapVien[]>([]);
   const [departments, setDepartments] = useState<KhoaPhong[]>([]);
   const [loading, setLoading] = useState(false);
@@ -116,14 +118,15 @@ const DischargeListPage = () => {
       title: "Thao tác",
       key: "action",
       render: (record: NhapVien) => (
-        <Button
-          icon={<CheckCircleOutlined />}
-          type="primary"
-          disabled={record.trangThai === "Đang điều trị"}
-          onClick={() => openDischargeModal(record)}
-        >
-          Chốt xuất viện
-        </Button>
+        record.trangThai === "Đang điều trị" ? (
+          <Button onClick={() => navigate(`/dashboard/invoices?nhapVienId=${record.id}`)}>
+            Tạo hóa đơn
+          </Button>
+        ) : (
+          <Button icon={<CheckCircleOutlined />} type="primary" onClick={() => openDischargeModal(record)}>
+            Chốt xuất viện
+          </Button>
+        )
       ),
     },
   ];
